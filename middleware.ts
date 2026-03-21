@@ -1,0 +1,44 @@
+import { NextRequest, NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
+
+export async function middleware(req: NextRequest) {
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+  const pathname = req.nextUrl.pathname;
+
+  const isPublic =
+    pathname === "/" ||
+    pathname === "/login" ||
+    pathname === "/assinar" ||
+    pathname === "/obrigado" ||
+    pathname === "/trocar-senha" ||
+    pathname === "/recuperar-senha" ||
+    pathname === "/redefinir-senha" ||
+    pathname === "/termos-de-uso" ||
+    pathname === "/politica-de-privacidade" ||
+    pathname.startsWith("/api/auth") ||
+    pathname.startsWith("/api/register") ||
+    pathname.startsWith("/api/webhook") ||
+    pathname.startsWith("/api/billing") ||
+    pathname.startsWith("/api/check-payment") ||
+    pathname.startsWith("/api/assinatura");
+
+  if (isPublic) return NextResponse.next();
+
+  if (!token) {
+    return NextResponse.redirect(new URL("/login", req.nextUrl));
+  }
+
+  const isAllowedBlocked =
+    pathname === "/assinatura" ||
+    pathname === "/suporte";
+
+  if (!isAllowedBlocked && token.isPaid === false) {
+    return NextResponse.redirect(new URL("/assinatura", req.nextUrl));
+  }
+
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\.png|.*\\.jpg|.*\\.jpeg|.*\\.svg|.*\\.webp|.*\\.ico).*)"],
+};
