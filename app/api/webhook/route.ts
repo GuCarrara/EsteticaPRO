@@ -3,8 +3,6 @@ import prisma from "@/app/lib/prisma";
 import bcrypt from "bcryptjs";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 function generatePassword() {
   const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   let password = "";
@@ -15,8 +13,9 @@ function generatePassword() {
 }
 
 export async function POST(req: NextRequest) {
+  const resend = new Resend(process.env.RESEND_API_KEY);
+
   try {
-    // Validar token do Asaas
     const token = req.headers.get("asaas-access-token");
     if (!token || token !== process.env.ASAAS_WEBHOOK_TOKEN) {
       console.warn("Webhook bloqueado — token inválido");
@@ -26,7 +25,6 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     console.log("Webhook Asaas:", JSON.stringify(body));
 
-    // Pagamento confirmado → ativa acesso
     if (body.event === "PAYMENT_CONFIRMED" || body.event === "PAYMENT_RECEIVED") {
       const payment = body.payment;
       if (!payment) return NextResponse.json({ ok: true });
@@ -102,7 +100,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: true });
     }
 
-    // Pagamento atrasado → bloqueia acesso
     if (body.event === "PAYMENT_OVERDUE") {
       const payment = body.payment;
       if (!payment) return NextResponse.json({ ok: true });
