@@ -1,125 +1,138 @@
 "use client";
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export default function AssinarPage() {
+function AssinarForm() {
+  const searchParams = useSearchParams();
+  const planParam = searchParams.get("plano") || "mensal";
+
+  const [plan, setPlan] = useState(planParam);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [cpf, setCpf] = useState("");
+  const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const whatsappLink = "https://wa.me/5511999999999?text=Olá,%20quero%20assinar%20o%20EstéticaPro!";
+  const plans = {
+    mensal: { label: "Mensal", price: "R$ 97,90/mês", value: 97.90 },
+    anual: { label: "Anual", price: "R$ 79,90/mês (cobrado anualmente)", value: 957.80 },
+  };
 
-  const plans = [
-    {
-      name: "Mensal",
-      price: "97,90",
-      period: "/mês",
-      description: "Ideal para começar",
-      features: [
-        "Agenda de agendamentos",
-        "Cadastro de clientes e veículos",
-        "Gestão de serviços",
-        "Confirmação via WhatsApp",
-        "Suporte por WhatsApp",
-      ],
-      cta: "Assinar Mensal",
-      featured: false,
-    },
-    {
-      name: "Anual",
-      price: "79,90",
-      period: "/mês",
-      description: "Melhor custo-benefício",
-      save: "Economize 2 meses",
-      features: [
-        "Agenda de agendamentos",
-        "Cadastro de clientes e veículos",
-        "Gestão de serviços",
-        "Confirmação via WhatsApp",
-        "Suporte prioritário",
-        "Relatórios financeiros",
-        "Usuários ilimitados",
-      ],
-      cta: "Assinar Anual",
-      featured: true,
-    },
-  ];
+  const handleSubmit = async () => {
+    if (!name || !email || !cpf) {
+      setError("Preencha todos os campos obrigatórios!");
+      return;
+    }
+    setLoading(true);
+    setError("");
+
+    const res = await fetch("/api/billing", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, cpf, phone, plan }),
+    });
+
+    const data = await res.json();
+    setLoading(false);
+
+    if (!res.ok) {
+      setError(data.error || "Erro ao processar. Tente novamente.");
+      return;
+    }
+
+    // Redireciona para o link de pagamento do Asaas
+    window.location.href = data.paymentLink;
+  };
 
   return (
     <>
       <style>{`
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; }
-        .assinar-outer { min-height: 100vh; background: #F1F5F9; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
-        .assinar-inner { max-width: 860px; width: 100%; }
-        .assinar-title { font-size: 32px; font-weight: 800; color: #1E293B; text-align: center; margin-bottom: 8px; }
-        .assinar-title span { color: #4F8EF7; }
-        .assinar-sub { font-size: 16px; color: #64748B; text-align: center; margin-bottom: 48px; }
-        .plans-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px; }
-        .plan-card { background: #fff; border-radius: 20px; padding: 36px 28px; border: 1.5px solid #E2E8F0; position: relative; }
-        .plan-card.featured { background: linear-gradient(160deg, #EFF6FF 0%, #DBEAFE 100%); border-color: #4F8EF7; box-shadow: 0 24px 64px rgba(79,142,247,0.2); transform: translateY(-8px); }
-        .plan-badge { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: #4F8EF7; color: #fff; padding: 6px 20px; border-radius: 100px; font-size: 11px; font-weight: 700; letter-spacing: 1px; white-space: nowrap; }
-        .plan-name { font-size: 24px; font-weight: 800; color: #1E293B; text-align: center; margin-bottom: 8px; }
-        .plan-save { background: #DBEAFE; color: #2563EB; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 100px; text-align: center; margin-bottom: 12px; display: inline-block; width: 100%; }
-        .plan-desc { font-size: 13px; color: #64748B; text-align: center; margin-bottom: 20px; }
-        .plan-price { text-align: center; margin-bottom: 24px; }
-        .plan-price strong { font-size: 44px; font-weight: 800; color: #4F8EF7; }
-        .plan-price span { font-size: 15px; color: #64748B; }
-        .plan-divider { border: none; border-top: 1px solid #E2E8F0; margin: 20px 0; }
-        .plan-features { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
-        .plan-feature { display: flex; align-items: center; gap: 8px; font-size: 14px; color: #475569; }
-        .plan-check { color: #4F8EF7; flex-shrink: 0; }
-        .plan-btn { width: 100%; padding: 14px; background: #4F8EF7; color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; transition: background 0.2s; text-decoration: none; display: block; text-align: center; }
-        .plan-btn:hover { background: #2563EB; }
-        .plan-secure { text-align: center; font-size: 11px; color: #94A3B8; margin-top: 10px; }
-        .assinar-wpp { text-align: center; }
-        .assinar-wpp a { display: inline-flex; align-items: center; gap: 8px; background: #25D366; color: #fff; padding: 14px 32px; border-radius: 100px; font-size: 15px; font-weight: 700; text-decoration: none; transition: background 0.2s; }
-        .assinar-wpp a:hover { background: #128C7E; }
-        .assinar-wpp p { font-size: 13px; color: #94A3B8; margin-top: 12px; }
-        @media (max-width: 640px) {
-          .plans-grid { grid-template-columns: 1fr; }
-          .plan-card.featured { transform: none; }
-        }
+        .outer { min-height: 100vh; background: #F1F5F9; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
+        .inner { max-width: 480px; width: 100%; }
+        .logo { font-size: 28px; font-weight: 800; color: #1E293B; text-align: center; margin-bottom: 8px; }
+        .logo span { color: #4F8EF7; }
+        .subtitle { font-size: 15px; color: #64748B; text-align: center; margin-bottom: 32px; }
+        .plan-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 24px; }
+        .plan-btn { padding: 12px; border-radius: 10px; border: 1.5px solid #E2E8F0; background: #fff; font-size: 14px; font-weight: 600; cursor: pointer; text-align: center; transition: all 0.2s; font-family: inherit; }
+        .plan-btn.active { background: #4F8EF7; color: #fff; border-color: #4F8EF7; }
+        .plan-price { font-size: 12px; font-weight: 400; display: block; margin-top: 2px; opacity: 0.8; }
+        .card { background: #fff; border-radius: 20px; padding: 32px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
+        .card-title { font-size: 18px; font-weight: 700; color: #1E293B; margin-bottom: 24px; }
+        .form-label { font-size: 13px; font-weight: 600; color: #475569; display: block; margin-bottom: 6px; }
+        .form-input { width: 100%; padding: 12px 14px; border: 1.5px solid #E2E8F0; border-radius: 10px; font-size: 14px; font-family: inherit; outline: none; background: #F8FAFC; margin-bottom: 16px; }
+        .form-input:focus { border-color: #4F8EF7; background: #fff; }
+        .submit-btn { width: 100%; padding: 16px; background: #4F8EF7; color: #fff; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; font-family: inherit; transition: background 0.2s; margin-top: 8px; }
+        .submit-btn:hover { background: #2563EB; }
+        .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .error { background: #FEF2F2; border: 1px solid #FECACA; color: #DC2626; padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; }
+        .secure { text-align: center; font-size: 12px; color: #94A3B8; margin-top: 16px; }
+        .back { display: block; text-align: center; margin-top: 16px; font-size: 13px; color: #4F8EF7; text-decoration: none; }
+        .summary { background: #EFF6FF; border-radius: 12px; padding: 16px; margin-bottom: 24px; }
+        .summary-plan { font-size: 15px; font-weight: 700; color: #1E293B; }
+        .summary-price { font-size: 13px; color: #4F8EF7; font-weight: 600; margin-top: 4px; }
       `}</style>
 
-      <div className="assinar-outer">
-        <div className="assinar-inner">
-          <div className="assinar-title">Estética<span>Pro</span></div>
-          <div className="assinar-sub">Escolha o plano ideal para sua estética automotiva</div>
+      <div className="outer">
+        <div className="inner">
+          <div className="logo">Estética<span>Pro</span></div>
+          <div className="subtitle">Comece a organizar sua estética hoje</div>
 
-          <div className="plans-grid">
-            {plans.map((plan, i) => (
-              <div key={i} className={`plan-card ${plan.featured ? "featured" : ""}`}>
-                {plan.featured && <div className="plan-badge">🔥 MAIS POPULAR</div>}
-                <div className="plan-name">{plan.name}</div>
-                {plan.save && <div className="plan-save">{plan.save}</div>}
-                <div className="plan-desc">{plan.description}</div>
-                <div className="plan-price">
-                  <strong>{plan.price}</strong>
-                  <span>{plan.period}</span>
-                </div>
-                <hr className="plan-divider" />
-                <div className="plan-features">
-                  {plan.features.map((f, j) => (
-                    <div key={j} className="plan-feature">
-                      <span className="plan-check">✓</span>
-                      {f}
-                    </div>
-                  ))}
-                </div>
-                <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="plan-btn">
-                  {plan.cta}
-                </a>
-                <div className="plan-secure">🔒 Pagamento 100% seguro</div>
-              </div>
-            ))}
+          {/* Seletor de plano */}
+          <div className="plan-toggle">
+            <button className={`plan-btn ${plan === "mensal" ? "active" : ""}`} onClick={() => setPlan("mensal")}>
+              Mensal
+              <span className="plan-price">R$ 97,90/mês</span>
+            </button>
+            <button className={`plan-btn ${plan === "anual" ? "active" : ""}`} onClick={() => setPlan("anual")}>
+              Anual 🔥
+              <span className="plan-price">R$ 79,90/mês</span>
+            </button>
           </div>
 
-          <div className="assinar-wpp">
-            <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
-              💬 Falar com a equipe antes de assinar
-            </a>
-            <p>Tire suas dúvidas pelo WhatsApp antes de contratar</p>
+          <div className="card">
+            <div className="summary">
+              <div className="summary-plan">Plano {plans[plan as keyof typeof plans].label}</div>
+              <div className="summary-price">{plans[plan as keyof typeof plans].price}</div>
+            </div>
+
+            <div className="card-title">Seus dados</div>
+
+            {error && <div className="error">{error}</div>}
+
+            <label className="form-label">Nome completo *</label>
+            <input className="form-input" placeholder="Seu nome completo" value={name} onChange={e => setName(e.target.value)} />
+
+            <label className="form-label">E-mail *</label>
+            <input className="form-input" type="email" placeholder="seu@email.com" value={email} onChange={e => setEmail(e.target.value)} />
+
+            <label className="form-label">CPF *</label>
+            <input className="form-input" placeholder="000.000.000-00" value={cpf} onChange={e => setCpf(e.target.value)} />
+
+            <label className="form-label">Telefone</label>
+            <input className="form-input" placeholder="(11) 99999-9999" value={phone} onChange={e => setPhone(e.target.value)} />
+
+            <button className="submit-btn" onClick={handleSubmit} disabled={loading}>
+              {loading ? "Processando..." : "🚀 Continuar para pagamento"}
+            </button>
+
+            <div className="secure">🔒 Pagamento 100% seguro via Asaas</div>
           </div>
+
+          <a href="/" className="back">← Voltar para a página inicial</a>
         </div>
       </div>
     </>
+  );
+}
+
+export default function AssinarPage() {
+  return (
+    <Suspense fallback={<div>Carregando...</div>}>
+      <AssinarForm />
+    </Suspense>
   );
 }
