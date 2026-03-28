@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Resend } from "resend";
 import prisma from "@/app/lib/prisma";
 import bcrypt from "bcryptjs";
 
@@ -25,10 +24,9 @@ async function sendWhatsApp(phone: string, message: string) {
 
 export async function POST(req: NextRequest) {
   try {
-    const resend = new Resend(process.env.RESEND_API_KEY);
     const { name, email, phone } = await req.json();
 
-    if (!name || !email) {
+    if (!name || !email || !phone) {
       return NextResponse.json({ error: "Preencha todos os campos" }, { status: 400 });
     }
 
@@ -46,28 +44,14 @@ export async function POST(req: NextRequest) {
       create: { name, email, phone: phone || null, password: "", isPaid: false, resetToken: code, resetTokenExpiry: expiresAt },
     });
 
-    await resend.emails.send({
-      from: "EstéticaPro <contato@esteticapro.com.br>",
-      to: email,
-      subject: "Seu código de verificação — EstéticaPro",
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 32px;">
-          <h1 style="color: #4F8EF7; font-size: 24px;">🚗 EstéticaPro</h1>
-          <p>Olá, <strong>${name}</strong>! Use o código abaixo para ativar sua conta:</p>
-          <div style="background: #F8FAFC; border-radius: 16px; padding: 32px; text-align: center; margin: 24px 0; border: 2px solid #E2E8F0;">
-            <div style="font-size: 48px; font-weight: 900; letter-spacing: 12px; color: #1E293B;">${code}</div>
-            <p style="color: #64748B; font-size: 13px; margin-top: 12px;">Válido por 15 minutos</p>
-          </div>
-          <p style="color: #64748B; font-size: 13px;">Se você não solicitou este código, ignore este e-mail.</p>
-        </div>
-      `,
-    });
-
-    if (phone) {
-      await sendWhatsApp(phone,
-        `🚗 *EstéticaPro*\n\nOlá, *${name}*! Seu código de verificação é:\n\n*${code}*\n\n⏱️ Válido por 15 minutos.`
-      );
-    }
+    // Envia código via WhatsApp
+    await sendWhatsApp(phone,
+      `🚗 *EstéticaPro*\n\n` +
+      `Olá, *${name}*! Seu código de verificação é:\n\n` +
+      `*${code}*\n\n` +
+      `⏱️ Válido por 15 minutos.\n\n` +
+      `Se não foi você, ignore esta mensagem.`
+    );
 
     return NextResponse.json({ ok: true });
   } catch (error) {
@@ -108,6 +92,16 @@ export async function PUT(req: NextRequest) {
         mustChangePassword: false,
       },
     });
+
+    // Boas-vindas via WhatsApp
+    if (user.phone) {
+      await sendWhatsApp(user.phone,
+        `🚗 *Bem-vindo ao EstéticaPro!*\n\n` +
+        `Sua conta foi ativada com sucesso!\n\n` +
+        `🎁 Você tem *7 dias grátis* para testar o sistema.\n\n` +
+        `Acesse agora: estetica-pro-ten.vercel.app/login`
+      );
+    }
 
     return NextResponse.json({ ok: true });
   } catch (error) {
