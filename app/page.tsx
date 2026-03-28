@@ -420,7 +420,7 @@ export default function LandingPage() {
             <div className="price-period">após o período de teste</div>
             <hr className="price-divider" />
             <div className="price-feat">✨ Incluído:</div>
-            {["Agenda de agendamentos","Clientes e veículos ilimitados","Gestão de serviços","Confirmação via WhatsApp","Suporte por WhatsApp"].map((f,i) => (
+            {["Agenda de serviços","Clientes e veículos ilimitados","Gestão de serviços","Suporte por WhatsApp"].map((f,i) => (
               <div key={i} className="price-item"><span className="pi-check">✓</span>{f}</div>
             ))}
             <Link href="/assinar?plano=mensal">
