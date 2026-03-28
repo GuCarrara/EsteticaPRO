@@ -13,10 +13,10 @@ type Appointment = {
 export default function DashboardPage() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
-
-const [trialTimeLeft, setTrialTimeLeft] = useState<{days: number; hours: number; minutes: number; seconds: number} | null>(null);
+  const [trialTimeLeft, setTrialTimeLeft] = useState<{days: number; hours: number; minutes: number; seconds: number} | null>(null);
   const [planType, setPlanType] = useState<string | null>(null);
   const [planExpiresAt, setPlanExpiresAt] = useState<string | null>(null);
+  const today = new Date().toISOString().split("T")[0];
 
   useEffect(() => {
     fetch("/api/assinatura")
@@ -43,33 +43,6 @@ const [trialTimeLeft, setTrialTimeLeft] = useState<{days: number; hours: number;
     const timer = setInterval(update, 1000);
     return () => clearInterval(timer);
   }, [planType, planExpiresAt]);
-
-  {planType === "trial" && trialTimeLeft && (
-        <div style={{background:"linear-gradient(135deg,#1E293B 0%,#0F172A 100%)", borderRadius:16, padding:"20px 24px", marginBottom:24, border:"1px solid #F59E0B", display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:16}}>
-          <div>
-            <div style={{fontSize:13, fontWeight:700, color:"#F59E0B", marginBottom:4}}>🎁 MODO TESTE GRATUITO</div>
-            <div style={{fontSize:15, color:"#fff", fontWeight:600}}>Seu período gratuito termina em:</div>
-          </div>
-          <div style={{display:"flex", gap:12}}>
-            {[
-              {val: trialTimeLeft.days, label: "dias"},
-              {val: trialTimeLeft.hours, label: "horas"},
-              {val: trialTimeLeft.minutes, label: "min"},
-              {val: trialTimeLeft.seconds, label: "seg"},
-            ].map((t, i) => (
-              <div key={i} style={{background:"rgba(245,158,11,0.15)", border:"1px solid rgba(245,158,11,0.3)", borderRadius:10, padding:"10px 14px", textAlign:"center", minWidth:56}}>
-                <div style={{fontSize:22, fontWeight:800, color:"#F59E0B", lineHeight:1}}>{String(t.val).padStart(2,"0")}</div>
-                <div style={{fontSize:10, color:"#94A3B8", marginTop:4, fontWeight:600, textTransform:"uppercase"}}>{t.label}</div>
-              </div>
-            ))}
-          </div>
-          <a href="/assinatura" style={{background:"#F59E0B", color:"#1E293B", padding:"10px 20px", borderRadius:10, fontWeight:700, fontSize:14, textDecoration:"none", whiteSpace:"nowrap"}}>
-            ⭐ Assinar agora
-          </a>
-        </div>
-      )}
-
-  const today = new Date().toISOString().split("T")[0];
 
   useEffect(() => {
     fetch(`/api/agendamentos?date=${today}`)
@@ -119,6 +92,32 @@ const [trialTimeLeft, setTrialTimeLeft] = useState<{days: number; hours: number;
         .btn-wpp { background: #25D366; color: #fff; border: none; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit; margin-left: 8px; }
         @media (max-width: 768px) { .dash-cards { grid-template-columns: 1fr; } }
       `}</style>
+
+      {/* Banner Trial */}
+      {planType === "trial" && trialTimeLeft && (
+        <div style={{background:"linear-gradient(135deg,#1E293B 0%,#0F172A 100%)", borderRadius:16, padding:"20px 24px", marginBottom:24, border:"1px solid #F59E0B", display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:16}}>
+          <div>
+            <div style={{fontSize:13, fontWeight:700, color:"#F59E0B", marginBottom:4}}>🎁 MODO TESTE GRATUITO</div>
+            <div style={{fontSize:15, color:"#fff", fontWeight:600}}>Seu período gratuito termina em:</div>
+          </div>
+          <div style={{display:"flex", gap:12}}>
+            {[
+              {val: trialTimeLeft.days, label: "dias"},
+              {val: trialTimeLeft.hours, label: "horas"},
+              {val: trialTimeLeft.minutes, label: "min"},
+              {val: trialTimeLeft.seconds, label: "seg"},
+            ].map((t, i) => (
+              <div key={i} style={{background:"rgba(245,158,11,0.15)", border:"1px solid rgba(245,158,11,0.3)", borderRadius:10, padding:"10px 14px", textAlign:"center", minWidth:56}}>
+                <div style={{fontSize:22, fontWeight:800, color:"#F59E0B", lineHeight:1}}>{String(t.val).padStart(2,"0")}</div>
+                <div style={{fontSize:10, color:"#94A3B8", marginTop:4, fontWeight:600, textTransform:"uppercase"}}>{t.label}</div>
+              </div>
+            ))}
+          </div>
+          <a href="/assinatura" style={{background:"#F59E0B", color:"#1E293B", padding:"10px 20px", borderRadius:10, fontWeight:700, fontSize:14, textDecoration:"none", whiteSpace:"nowrap"}}>
+            ⭐ Assinar agora
+          </a>
+        </div>
+      )}
 
       <div className="dash-title">📊 Dashboard</div>
       <div className="dash-sub">
