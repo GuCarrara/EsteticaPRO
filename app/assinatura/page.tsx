@@ -22,11 +22,26 @@ export default function AssinaturaPage() {
     return new Date(date).toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" });
   };
 
+  const getPlanLabel = (type: string) => {
+    if (type === "premium") return "Premium";
+    if (type === "trial") return "Teste Gratuito";
+    if (type === "anual") return "Anual";
+    return "Mensal";
+  };
+
+  const getPlanValue = (type: string) => {
+    if (type === "premium") return "R$ 249,90/mês";
+    if (type === "trial") return "Gratuito por 7 dias";
+    if (type === "anual") return "R$ 79,90/mês (cobrado anualmente)";
+    return "R$ 97,90/mês";
+  };
+
   const getStatus = () => {
     if (!data) return null;
     if (!data.isPaid) return { label: "Bloqueado", color: "#DC2626", bg: "#FEF2F2", border: "#FECACA", icon: "🔒" };
     if (data.daysLeft !== null && data.daysLeft <= 5 && data.daysLeft > 0) return { label: "Vencendo em breve", color: "#D97706", bg: "#FFFBEB", border: "#FDE68A", icon: "⚠️" };
     if (data.daysLeft !== null && data.daysLeft <= 0) return { label: "Vencido", color: "#DC2626", bg: "#FEF2F2", border: "#FECACA", icon: "🚨" };
+    if (data.planType === "trial") return { label: "Teste Gratuito", color: "#7C3AED", bg: "#F5F3FF", border: "#DDD6FE", icon: "🎁" };
     return { label: "Ativo", color: "#16A34A", bg: "#F0FDF4", border: "#BBF7D0", icon: "✅" };
   };
 
@@ -38,6 +53,7 @@ export default function AssinaturaPage() {
       if (res.ok) {
         setCancelMsg("✅ Assinatura cancelada. Seu acesso permanece ativo até o fim do período pago.");
         setShowConfirm(false);
+        setData((prev: any) => ({ ...prev, canceled: true }));
       } else {
         setCancelMsg(json.error || "Erro ao cancelar. Entre em contato com o suporte.");
         setShowConfirm(false);
@@ -50,6 +66,8 @@ export default function AssinaturaPage() {
   };
 
   const status = getStatus();
+  const isTrial = data?.planType === "trial";
+  const isExpired = data?.daysLeft !== null && data?.daysLeft <= 0;
 
   return (
     <>
@@ -62,10 +80,10 @@ export default function AssinaturaPage() {
         .assl-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #F1F5F9; }
         .assl-row:last-child { border-bottom: none; padding-bottom: 0; }
         .assl-label { font-size: 14px; color: #64748B; }
-        .assl-value { font-size: 14px; font-weight: 600; color: #1E293B; }
+        .assl-value { font-size: 14px; font-weight: 600; color: #1E293B; text-align: right; }
         .assl-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 100px; font-size: 13px; font-weight: 600; }
         .assl-alert { border-radius: 14px; padding: 20px 24px; margin-bottom: 16px; border: 1px solid; display: flex; align-items: flex-start; gap: 14px; }
-        .assl-alert-icon { font-size: 22px; flex-shrink: 0; }
+        .assl-alert-icon { font-size: 22px; flex-shrink: 0; margin-top: 1px; }
         .assl-alert-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
         .assl-alert-text { font-size: 13px; line-height: 1.6; opacity: 0.85; }
         .assl-progress-bar { background: #E2E8F0; border-radius: 100px; height: 8px; margin-top: 16px; overflow: hidden; }
@@ -73,10 +91,12 @@ export default function AssinaturaPage() {
         .assl-progress-label { display: flex; justify-content: space-between; font-size: 12px; color: #94A3B8; margin-top: 6px; }
         .assl-btn { display: block; width: 100%; padding: 14px; background: #4F8EF7; color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; text-align: center; text-decoration: none; transition: background 0.2s; font-family: inherit; margin-bottom: 10px; }
         .assl-btn:hover { background: #2563EB; }
+        .assl-btn:last-child { margin-bottom: 0; }
         .assl-btn-wpp { background: #25D366; }
         .assl-btn-wpp:hover { background: #128C7E; }
         .assl-btn-cancel { background: #fff; color: #DC2626; border: 1.5px solid #FECACA; }
         .assl-btn-cancel:hover { background: #FEF2F2; }
+        .assl-btn-premium { background: linear-gradient(90deg,#F59E0B,#EF4444) !important; }
         .assl-cancel-note { font-size: 12px; color: #94A3B8; text-align: center; margin-top: 8px; line-height: 1.6; }
         .assl-skeleton { background: linear-gradient(90deg, #F1F5F9 25%, #E2E8F0 50%, #F1F5F9 75%); background-size: 200% 100%; animation: shimmer 1.2s infinite; border-radius: 8px; height: 18px; }
         @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
@@ -90,6 +110,7 @@ export default function AssinaturaPage() {
         .assl-modal-btn-yes:hover { background: #B91C1C; }
         .assl-modal-btn-no { flex: 1; padding: 13px; background: #F1F5F9; color: #1E293B; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; }
         .assl-modal-btn-no:hover { background: #E2E8F0; }
+        .planos-label { font-size: 13px; font-weight: 600; color: #64748B; margin-bottom: 12px; }
       `}</style>
 
       {showConfirm && (
@@ -120,7 +141,8 @@ export default function AssinaturaPage() {
           <div className="assl-card">
             <div className="assl-skeleton" style={{width:"40%", marginBottom:20}}></div>
             <div className="assl-skeleton" style={{marginBottom:12}}></div>
-            <div className="assl-skeleton" style={{width:"70%"}}></div>
+            <div className="assl-skeleton" style={{width:"70%", marginBottom:12}}></div>
+            <div className="assl-skeleton" style={{width:"85%"}}></div>
           </div>
         ) : !data || data.error ? (
           <div className="assl-card" style={{textAlign:"center", color:"#64748B"}}>
@@ -128,12 +150,33 @@ export default function AssinaturaPage() {
           </div>
         ) : (
           <>
+            {/* Alertas */}
             {!data.isPaid && (
               <div className="assl-alert" style={{background:"#FEF2F2", borderColor:"#FECACA", color:"#DC2626"}}>
                 <div className="assl-alert-icon">🔒</div>
                 <div>
                   <div className="assl-alert-title">Acesso bloqueado</div>
                   <div className="assl-alert-text">Sua assinatura está em atraso. Efetue o pagamento para reativar o acesso.</div>
+                </div>
+              </div>
+            )}
+
+            {isTrial && data.daysLeft !== null && data.daysLeft <= 3 && data.daysLeft > 0 && (
+              <div className="assl-alert" style={{background:"#F5F3FF", borderColor:"#DDD6FE", color:"#7C3AED"}}>
+                <div className="assl-alert-icon">⏰</div>
+                <div>
+                  <div className="assl-alert-title">Seu teste termina em {data.daysLeft} dia{data.daysLeft !== 1 ? "s" : ""}!</div>
+                  <div className="assl-alert-text">Assine agora para continuar usando o EstéticaPro sem interrupção.</div>
+                </div>
+              </div>
+            )}
+
+            {data.isPaid && !isTrial && data.daysLeft !== null && data.daysLeft <= 5 && data.daysLeft > 0 && (
+              <div className="assl-alert" style={{background:"#FFFBEB", borderColor:"#FDE68A", color:"#92400E"}}>
+                <div className="assl-alert-icon">⚠️</div>
+                <div>
+                  <div className="assl-alert-title">Vencendo em {data.daysLeft} dia{data.daysLeft !== 1 ? "s" : ""}</div>
+                  <div className="assl-alert-text">Renove sua assinatura para não perder o acesso ao sistema.</div>
                 </div>
               </div>
             )}
@@ -148,6 +191,7 @@ export default function AssinaturaPage() {
               </div>
             )}
 
+            {/* Detalhes */}
             <div className="assl-card">
               <div className="assl-card-title">Detalhes do Plano</div>
               <div className="assl-row">
@@ -158,14 +202,18 @@ export default function AssinaturaPage() {
               </div>
               <div className="assl-row">
                 <span className="assl-label">Plano</span>
-                <span className="assl-value">{data.planType ? data.planType.charAt(0).toUpperCase() + data.planType.slice(1) : "—"}</span>
+                <span className="assl-value">{data.planType ? getPlanLabel(data.planType) : "—"}</span>
               </div>
               <div className="assl-row">
-                <span className="assl-label">Último pagamento</span>
+                <span className="assl-label">Valor</span>
+                <span className="assl-value">{data.planType ? getPlanValue(data.planType) : "—"}</span>
+              </div>
+              <div className="assl-row">
+                <span className="assl-label">{isTrial ? "Início do teste" : "Último pagamento"}</span>
                 <span className="assl-value">{formatDate(data.paidAt)}</span>
               </div>
               <div className="assl-row">
-                <span className="assl-label">Próximo vencimento</span>
+                <span className="assl-label">{isTrial ? "Teste termina em" : "Próximo vencimento"}</span>
                 <span className="assl-value" style={{color: data.daysLeft !== null && data.daysLeft <= 5 ? "#D97706" : "#1E293B"}}>
                   {formatDate(data.planExpiresAt)}
                 </span>
@@ -174,7 +222,7 @@ export default function AssinaturaPage() {
                 const total = new Date(data.planExpiresAt).getTime() - new Date(data.paidAt).getTime();
                 const elapsed = Date.now() - new Date(data.paidAt).getTime();
                 const pct = Math.min(100, Math.max(0, (elapsed / total) * 100));
-                const barColor = pct > 90 ? "#DC2626" : pct > 70 ? "#D97706" : "#4F8EF7";
+                const barColor = pct > 90 ? "#DC2626" : pct > 70 ? "#D97706" : isTrial ? "#7C3AED" : "#4F8EF7";
                 return (
                   <>
                     <div className="assl-progress-bar">
@@ -189,15 +237,42 @@ export default function AssinaturaPage() {
               })()}
             </div>
 
+            {/* Ações */}
             <div className="assl-card">
               <div className="assl-card-title">Ações</div>
-              <a href="/assinar" className="assl-btn">
-                {data.isPaid ? "🔄 Renovar Assinatura" : "🔓 Reativar Acesso"}
-              </a>
+
+              {(!data.isPaid || isTrial || isExpired) && (
+                <>
+                  <div className="planos-label">
+                    {isTrial ? "Assine agora para continuar após o teste:" : "Escolha seu plano:"}
+                  </div>
+                  <a href="/assinar?plano=mensal" className="assl-btn">
+                    🔓 Plano Mensal — R$ 97,90/mês
+                  </a>
+                  <a href="/assinar?plano=premium" className="assl-btn assl-btn-premium">
+                    ⭐ Plano Premium — R$ 249,90/mês
+                  </a>
+                </>
+              )}
+
+              {data.isPaid && !isTrial && !isExpired && (
+                <>
+                  <a href="/assinar?plano=mensal" className="assl-btn">
+                    🔄 Renovar — Plano Mensal
+                  </a>
+                  {data.planType !== "premium" && (
+                    <a href="/assinar?plano=premium" className="assl-btn assl-btn-premium">
+                      ⭐ Upgrade — Plano Premium
+                    </a>
+                  )}
+                </>
+              )}
+
               <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="assl-btn assl-btn-wpp">
                 💬 Falar com Suporte
               </a>
-              {data.isPaid && !cancelMsg && (
+
+              {data.isPaid && !isTrial && !cancelMsg && (
                 <>
                   <button className="assl-btn assl-btn-cancel" onClick={() => setShowConfirm(true)}>
                     ❌ Cancelar Assinatura
