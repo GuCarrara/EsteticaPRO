@@ -14,23 +14,22 @@ export async function POST(req: NextRequest) {
 
     // 1. Criar ou buscar cliente no Asaas
     const customerRes = await fetch(`${ASAAS_URL}/customers`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "access_token": ASAAS_KEY!,
-      },
-      body: JSON.stringify({
-        name,
-        email,
-        cpfCnpj: cpf.replace(/\D/g, ""),
-        mobilePhone: phone?.replace(/\D/g, "") || undefined,
-      }),
-    });
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "access_token": ASAAS_KEY!,
+  },
+  body: JSON.stringify({
+    name,
+    email,
+    cpfCnpj: cpf.replace(/\D/g, ""),
+    mobilePhone: phone?.replace(/\D/g, "") || undefined,
+  }),
+});
 
-    const customer = await customerRes.json();
-    if (!customer.id) {
-      return NextResponse.json({ error: "Erro ao criar cliente no Asaas" }, { status: 500 });
-    }
+const customerText = await customerRes.text();
+console.log("Asaas customer response:", customerText);
+const customer = JSON.parse(customerText);
 
     // 2. Definir valor e ciclo pelo plano
     const planConfig = {

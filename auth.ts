@@ -19,6 +19,7 @@ export const authOptions: NextAuthOptions = {
         });
 
         if (!user) return null;
+        if (!user.password) return null;
 
         const passwordMatch = await bcrypt.compare(
           credentials.password,
@@ -33,6 +34,7 @@ export const authOptions: NextAuthOptions = {
           name: user.name,
           isPaid: user.isPaid,
           planType: user.planType,
+          planExpiresAt: user.planExpiresAt,
           mustChangePassword: user.mustChangePassword,
         };
       },
@@ -44,6 +46,7 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id;
         token.isPaid = (user as any).isPaid;
         token.planType = (user as any).planType;
+        token.planExpiresAt = (user as any).planExpiresAt;
         token.mustChangePassword = (user as any).mustChangePassword;
       }
       return token;
@@ -53,6 +56,7 @@ export const authOptions: NextAuthOptions = {
         (session.user as any).id = token.id;
         (session.user as any).isPaid = token.isPaid;
         (session.user as any).planType = token.planType;
+        (session.user as any).planExpiresAt = token.planExpiresAt;
         (session.user as any).mustChangePassword = token.mustChangePassword;
       }
       return session;

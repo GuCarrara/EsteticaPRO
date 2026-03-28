@@ -13,6 +13,7 @@ export async function middleware(req: NextRequest) {
     pathname === "/trocar-senha" ||
     pathname === "/recuperar-senha" ||
     pathname === "/redefinir-senha" ||
+    pathname === "/definir-senha" ||
     pathname === "/termos-de-uso" ||
     pathname === "/politica-de-privacidade" ||
     pathname.startsWith("/api/auth") ||
@@ -20,7 +21,8 @@ export async function middleware(req: NextRequest) {
     pathname.startsWith("/api/webhook") ||
     pathname.startsWith("/api/billing") ||
     pathname.startsWith("/api/check-payment") ||
-    pathname.startsWith("/api/assinatura");
+    pathname.startsWith("/api/assinatura") ||
+    pathname.startsWith("/api/auth-code");
 
   if (isPublic) return NextResponse.next();
 
@@ -32,7 +34,11 @@ export async function middleware(req: NextRequest) {
     pathname === "/assinatura" ||
     pathname === "/suporte";
 
-  if (!isAllowedBlocked && token.isPaid === false) {
+  const planExpired = token.planExpiresAt
+    ? new Date() > new Date(token.planExpiresAt as string)
+    : false;
+
+  if (!isAllowedBlocked && (token.isPaid === false || planExpired)) {
     return NextResponse.redirect(new URL("/assinatura", req.nextUrl));
   }
 
