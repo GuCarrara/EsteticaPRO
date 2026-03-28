@@ -190,9 +190,9 @@ function AssinarContent() {
 
                 {trialStep === "codigo" && (
                   <>
-                    <div className="card-title">Verifique seu e-mail</div>
+                    <div className="card-title">Verifique seu WhatsApp</div>
                     <div className="card-sub">Enviamos um código de 6 dígitos para:</div>
-                    <div className="email-highlight">📧 {email}</div>
+                    <div className="email-highlight">📱 {phone}</div>
                     {error && <div className="error">{error}</div>}
                     <label className="form-label">Código de verificação *</label>
                     <input className="code-input" placeholder="000000" maxLength={6} value={code} onChange={e => setCode(e.target.value.replace(/\D/g, ""))} />
