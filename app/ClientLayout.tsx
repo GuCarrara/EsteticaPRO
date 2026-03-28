@@ -27,6 +27,7 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
     pathname === "/trocar-senha" ||
     pathname === "/recuperar-senha" ||
     pathname === "/redefinir-senha" ||
+    pathname === "/definir-senha" ||
     pathname === "/termos-de-uso" ||
     pathname === "/politica-de-privacidade";
 
