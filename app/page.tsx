@@ -406,38 +406,52 @@ export default function LandingPage() {
         <div className="section-header">
           <div className="section-tag">Planos</div>
           <h2>💳 Escolha Seu Plano</h2>
-          <p style={{color:"var(--primary-dark)",fontWeight:600}}>⚡ Todos os planos estão com desconto nesse momento</p>
+          <p style={{color:"var(--primary-dark)",fontWeight:600}}>⚡ Teste grátis por 7 dias — sem cartão necessário</p>
         </div>
-        <div className="price-grid">
-          <div className="price-card">
-            <div className="price-tag">Ideal para começar</div>
+        <div style={{display:"grid", gridTemplateColumns:"1fr 1fr", gap:24, maxWidth:800, margin:"0 auto", alignItems:"start"}}>
+
+          {/* MENSAL — TRIAL */}
+          <div className="price-card featured">
+            <div className="price-badge">🎁 MAIS POPULAR</div>
+            <div className="price-tag">Comece sem pagar nada</div>
             <div className="price-name">Mensal</div>
-            <div className="price-old">De R$ 197</div>
+            <div style={{background:"#F0FDF4", border:"1px solid #BBF7D0", color:"#16A34A", fontSize:12, fontWeight:700, padding:"4px 12px", borderRadius:100, textAlign:"center", marginBottom:12}}>🎁 7 dias grátis</div>
             <div className="price-val"><strong>97,90</strong><span>/mês</span></div>
+            <div className="price-period">após o período de teste</div>
             <hr className="price-divider" />
-            <div className="price-feat">✨ Tudo incluído:</div>
-            {["Agenda de agendamentos","Clientes e veículos ilimitados","Gestão de serviços","Confirmação via WhatsApp","Suporte por WhatsApp"].map((f,i) => <div key={i} className="price-item"><span className="pi-check">✓</span>{f}</div>)}
-            <Link href="/assinar?plano=mensal"><button className="price-btn secondary">Assinar Agora</button></Link>
-            <div className="price-secure">🔒 Pagamento 100% seguro</div>
+            <div className="price-feat">✨ Incluído:</div>
+            {["Agenda de agendamentos","Clientes e veículos ilimitados","Gestão de serviços","Confirmação via WhatsApp","Suporte por WhatsApp"].map((f,i) => (
+              <div key={i} className="price-item"><span className="pi-check">✓</span>{f}</div>
+            ))}
+            <Link href="/assinar?plano=mensal">
+              <button className="price-btn primary-btn" style={{marginTop:24}}>🎁 Testar 7 dias grátis</button>
+            </Link>
+            <div className="price-secure">Sem cartão • Cancele quando quiser</div>
           </div>
 
-          <div className="price-card featured">
-            <div className="price-badge">🔥 MAIS POPULAR</div>
-            <div className="price-tag">Melhor custo-benefício</div>
-            <div className="price-name">Anual</div>
-            <div className="price-save">Economize mais de 50%</div>
-            <div className="price-old">De R$ 997,00</div>
-            <div className="price-val"><strong>79,90</strong><span> — 12x</span></div>
-            <div className="price-period">Acesso por 1 ano completo</div>
-            <hr className="price-divider" />
-            <div className="price-feat">✨ Tudo incluído:</div>
-            {["Agenda de agendamentos","Clientes e veículos ilimitados","Gestão de serviços","Confirmação via WhatsApp","Dashboard completo","Relatórios de agendamentos","Suporte Prioritário WhatsApp"].map((f,i) => <div key={i} className="price-item"><span className="pi-check">✓</span>{f}</div>)}
-            <Link href="/assinar?plano=anual"><button className="price-btn primary-btn">🚀 Começar Agora</button></Link>
-            <div className="price-secure">🔒 Pagamento 100% seguro</div>
+          {/* PREMIUM */}
+          <div className="price-card" style={{background:"linear-gradient(160deg,#1E293B 0%,#0F172A 100%)", border:"1.5px solid #F59E0B", position:"relative"}}>
+            <div className="price-badge" style={{background:"linear-gradient(90deg,#F59E0B,#EF4444)"}}>⭐ PREMIUM</div>
+            <div className="price-tag" style={{color:"#94A3B8"}}>Para quem quer o máximo</div>
+            <div className="price-name" style={{color:"#F59E0B"}}>Premium</div>
+            <div style={{background:"rgba(245,158,11,0.15)", border:"1px solid rgba(245,158,11,0.3)", color:"#FCD34D", fontSize:11, fontWeight:700, padding:"4px 12px", borderRadius:100, textAlign:"center", marginBottom:12}}>🚗 WhatsApp integrado</div>
+            <div className="price-old" style={{color:"#64748B"}}>De R$ 497,00</div>
+            <div className="price-val"><strong style={{color:"#F59E0B"}}>249,90</strong><span style={{color:"#94A3B8"}}>/mês</span></div>
+            <div className="price-period" style={{color:"#64748B"}}>Acesso mensal completo</div>
+            <hr className="price-divider" style={{borderColor:"#334155"}} />
+            <div className="price-feat" style={{color:"#F59E0B"}}>⭐ Tudo do Mensal +</div>
+            {["WhatsApp próprio conectado","Envio automático de lembretes","Notificações para clientes","Instância exclusiva Evolution API","Suporte VIP prioritário"].map((f,i) => (
+              <div key={i} className="price-item" style={{color:"#CBD5E1"}}><span style={{color:"#F59E0B", flexShrink:0, marginTop:1}}>✓</span>{f}</div>
+            ))}
+            <Link href="/assinar?plano=premium">
+              <button className="price-btn" style={{background:"linear-gradient(90deg,#F59E0B,#EF4444)", color:"#fff", boxShadow:"0 8px 24px rgba(245,158,11,0.3)", marginTop:24, width:"100%", padding:14, borderRadius:10, fontSize:15, fontWeight:700, cursor:"pointer", border:"none", fontFamily:"inherit"}}>⭐ Assinar Premium</button>
+            </Link>
+            <div className="price-secure" style={{color:"#64748B"}}>🔒 Pagamento 100% seguro</div>
           </div>
+
         </div>
       </section>
-
+      
       {/* FAQ */}
       <section className="faq">
         <div className="section-header">
