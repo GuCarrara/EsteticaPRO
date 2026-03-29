@@ -54,7 +54,7 @@ function DefinirSenhaContent() {
 
       <div className="outer">
         <div className="inner">
-          <div className="logo">Estética<span>Pro</span></div>
+          <img src="/logo.png" alt="EstéticaPro" style={{height:48}} />
           <div className="subtitle">Quase lá! Crie sua senha para acessar.</div>
           <div className="card">
             <div className="card-title">🔐 Crie sua senha</div>

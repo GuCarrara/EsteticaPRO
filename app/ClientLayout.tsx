@@ -107,7 +107,7 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
       {/* Desktop sidebar */}
       <div className="sidebar">
         <div className="sidebar-logo">
-          <div className="sidebar-logo-text">Estética<span>Pro</span></div>
+          <img src="/logo.png" alt="EstéticaPro" style={{height:56, objectFit:"contain"}} />
           <div className="sidebar-logo-sub">Sistema para estéticas automotivas</div>
         </div>
         <nav style={{flex:1, padding:"16px 8px", display:"flex", flexDirection:"column", gap:4, overflowY:"auto"}}>
