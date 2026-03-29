@@ -133,14 +133,19 @@ export async function POST(req: NextRequest) {
       const customer = await customerRes.json();
       if (!customer.email) return NextResponse.json({ ok: true });
 
+      // Verifica se usuário existe antes de atualizar
       const user = await prisma.user.findUnique({ where: { email: customer.email } });
+      if (!user) {
+        console.log("Usuário não encontrado para PAYMENT_OVERDUE:", customer.email);
+        return NextResponse.json({ ok: true });
+      }
 
       await prisma.user.update({
         where: { email: customer.email },
         data: { isPaid: false },
       });
 
-      const phone = customer.mobilePhone || customer.phone || user?.phone;
+      const phone = customer.mobilePhone || customer.phone || user.phone;
       if (phone) {
         await sendWhatsApp(phone,
           `🚗 *EstéticaPro*\n\n` +
