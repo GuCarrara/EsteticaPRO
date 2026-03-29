@@ -243,7 +243,7 @@ export default function LandingPage() {
       {/* NAVBAR */}
       <nav>
         <div className="logo">
-          <img src="/logo.png" alt="EstéticaPro" style={{height:100, objectFit:"contain"}} />
+          <img src="/logo.png" alt="EstéticaPro" style={{height:80, maxWidth:180, objectFit:"contain"}} />
         </div>
         <Link href="/login" className="nav-btn">Entrar</Link>
       </nav>
