@@ -48,7 +48,7 @@ export default function RecuperarSenhaPage() {
 
       <div className="outer">
         <div className="inner">
-          <img src="/logo.png" alt="EstéticaPro" style={{height:80, objectFit:"contain"}} />
+          <img src="/logo.png" alt="EstéticaPro" style={{height:130, objectFit:"contain"}} />
           <div className="subtitle">Recuperação de senha</div>
           <div className="card">
             <div className="card-title">🔐 Esqueceu sua senha?</div>

@@ -155,7 +155,7 @@ function AssinarContent() {
 
       <div className="outer">
         <div className="inner">
-          <img src="/logo.png" alt="EstéticaPro" style={{height:80, objectFit:"contain"}} />
+          <img src="/logo.png" alt="EstéticaPro" style={{height:130, objectFit:"contain"}} />
 
           {/* FLUXO 1 — TRIAL (mensal, não logado) */}
           {isTrial && !isLoggedIn && (

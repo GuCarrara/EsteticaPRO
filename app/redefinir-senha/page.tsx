@@ -56,7 +56,7 @@ export default function RedefinirSenhaPage() {
 
       <div className="outer">
         <div className="inner">
-          <img src="/logo.png" alt="EstéticaPro" style={{height:48}} />
+          <img src="/logo.png" alt="EstéticaPro" style={{height:130, objectFit:"contain"}} />
           <div className="subtitle">Redefinição de senha</div>
           <div className="card">
             <div className="card-title">🔑 Redefinir senha</div>
