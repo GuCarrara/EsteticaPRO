@@ -3,6 +3,34 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
 import prisma from "@/app/lib/prisma";
 
+const EVOLUTION_URL = process.env.EVOLUTION_API_URL;
+const EVOLUTION_KEY = process.env.EVOLUTION_API_KEY;
+
+async function sendWhatsApp(instance: string, phone: string, message: string) {
+  try {
+    const number = phone.replace(/\D/g, "");
+    if (!number || number.length < 10) return;
+    await fetch(`${EVOLUTION_URL}/message/sendText/${instance}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "apikey": EVOLUTION_KEY!,
+      },
+      body: JSON.stringify({ number: `55${number}`, text: message }),
+    });
+  } catch (err) {
+    console.error("Erro WhatsApp agendamento:", err);
+  }
+}
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" });
+}
+
+function formatTime(date: Date) {
+  return date.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+}
+
 export async function GET(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
@@ -68,6 +96,23 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    // Envia WhatsApp para o cliente final se tiver instância configurada
+    if ((user as any).evolutionInstance && appointment.client.phone) {
+      const apptDate = new Date(appointment.date);
+      await sendWhatsApp(
+        (user as any).evolutionInstance,
+        appointment.client.phone,
+        `🚗 *Agendamento confirmado!*\n\n` +
+        `Olá, *${appointment.client.name}*! Seu agendamento foi registrado com sucesso.\n\n` +
+        `📅 *Data:* ${formatDate(apptDate)}\n` +
+        `🕐 *Horário:* ${formatTime(apptDate)}\n` +
+        `✨ *Serviço:* ${appointment.service.name}\n` +
+        `🚗 *Veículo:* ${appointment.vehicle.brand} ${appointment.vehicle.model}` +
+        `${appointment.vehicle.plate ? ` (${appointment.vehicle.plate})` : ""}\n\n` +
+        `Qualquer dúvida, entre em contato. Te esperamos! 😊`
+      );
+    }
+
     return NextResponse.json(appointment);
   } catch (error) {
     console.error("POST agendamentos error:", error);
@@ -101,6 +146,43 @@ export async function PUT(req: NextRequest) {
         service: true,
       },
     });
+
+    // Envia WhatsApp quando status muda
+    if ((user as any).evolutionInstance && updated.client.phone && body.status) {
+      const apptDate = new Date(updated.date);
+      let message = "";
+
+      if (body.status === "confirmed") {
+        message =
+          `✅ *Agendamento confirmado!*\n\n` +
+          `Olá, *${updated.client.name}*! Seu agendamento foi confirmado.\n\n` +
+          `📅 *Data:* ${formatDate(apptDate)}\n` +
+          `🕐 *Horário:* ${formatTime(apptDate)}\n` +
+          `✨ *Serviço:* ${updated.service.name}\n` +
+          `🚗 *Veículo:* ${updated.vehicle.brand} ${updated.vehicle.model}` +
+          `${updated.vehicle.plate ? ` (${updated.vehicle.plate})` : ""}\n\n` +
+          `Te esperamos! 😊`;
+      } else if (body.status === "completed") {
+        message =
+          `🎉 *Serviço concluído!*\n\n` +
+          `Olá, *${updated.client.name}*! O serviço do seu veículo foi concluído.\n\n` +
+          `✨ *Serviço:* ${updated.service.name}\n` +
+          `🚗 *Veículo:* ${updated.vehicle.brand} ${updated.vehicle.model}` +
+          `${updated.vehicle.plate ? ` (${updated.vehicle.plate})` : ""}\n\n` +
+          `Obrigado pela preferência! Volte sempre. 🚗`;
+      } else if (body.status === "cancelled") {
+        message =
+          `❌ *Agendamento cancelado*\n\n` +
+          `Olá, *${updated.client.name}*! Infelizmente seu agendamento foi cancelado.\n\n` +
+          `📅 *Data:* ${formatDate(apptDate)}\n` +
+          `✨ *Serviço:* ${updated.service.name}\n\n` +
+          `Entre em contato para remarcar. 😊`;
+      }
+
+      if (message) {
+        await sendWhatsApp((user as any).evolutionInstance, updated.client.phone, message);
+      }
+    }
 
     return NextResponse.json(updated);
   } catch (error) {
