@@ -16,6 +16,8 @@ export async function middleware(req: NextRequest) {
     pathname === "/definir-senha" ||
     pathname === "/termos-de-uso" ||
     pathname === "/politica-de-privacidade" ||
+    pathname.startsWith("/api/recuperar-senha") ||
+    pathname.startsWith("/api/redefinir-senha") ||
     pathname.startsWith("/api/auth") ||
     pathname.startsWith("/api/register") ||
     pathname.startsWith("/api/webhook") ||
