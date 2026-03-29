@@ -82,6 +82,9 @@ export default function LoginPage() {
           </form>
 
           <div className="login-footer">
+            <a href="/recuperar-senha" style={{color:"#4F8EF7", textDecoration:"none", fontSize:13}}>Esqueceu sua senha?</a>
+          </div>
+          <div className="login-footer">
             Não tem conta? <a href="/assinar">Assine agora</a>
           </div>
         </div>
