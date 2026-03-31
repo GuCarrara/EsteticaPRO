@@ -99,7 +99,7 @@ export async function PUT(req: NextRequest) {
         `🚗 *Bem-vindo ao EstéticaPro!*\n\n` +
         `Sua conta foi ativada com sucesso!\n\n` +
         `🎁 Você tem *7 dias grátis* para testar o sistema.\n\n` +
-        `Acesse agora: estetica-pro-ten.vercel.app/login`
+        `Acesse agora: esteticaproerp.com.br/login`
       );
     }
 

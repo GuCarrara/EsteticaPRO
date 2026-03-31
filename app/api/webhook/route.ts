@@ -79,7 +79,7 @@ export async function POST(req: NextRequest) {
             `🚗 *EstéticaPro*\n\n` +
             `Olá, *${existingUser.name}*! ✅\n\n` +
             `Seu pagamento foi confirmado e seu acesso foi renovado por mais 30 dias!\n\n` +
-            `Acesse: estetica-pro-ten.vercel.app/login`
+            `Acesse: esteticaproerp.com.br/login`
           );
         }
 
@@ -116,7 +116,7 @@ export async function POST(req: NextRequest) {
           `📧 *E-mail:* ${customer.email}\n` +
           `🔑 *Senha temporária:* ${password}\n\n` +
           `⚠️ Ao fazer login, você será solicitado a criar uma nova senha.\n\n` +
-          `👉 Acesse agora: estetica-pro-ten.vercel.app/login`
+          `👉 Acesse agora: esteticaproerp.com.br/login`
         );
       }
 
@@ -152,7 +152,7 @@ export async function POST(req: NextRequest) {
           `Olá, *${customer.name}*! ⚠️\n\n` +
           `Identificamos um pagamento em atraso em sua conta.\n\n` +
           `Para continuar usando o sistema, acesse:\n` +
-          `👉 estetica-pro-ten.vercel.app/assinatura`
+          `👉 esteticaproerp.com.br/assinatura`
         );
       }
 

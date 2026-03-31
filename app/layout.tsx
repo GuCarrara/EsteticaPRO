@@ -3,9 +3,11 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
 import ClientLayout from "./ClientLayout";
 
-export const metadata: Metadata = {
+export const metadata = {
   title: "EstéticaPro | Sistema para Estéticas Automotivas",
-  description: "Gerencie agendamentos, clientes e veículos da sua estética automotiva.",
+  icons: {
+    icon: "/logo.png",
+  },
 };
 
 export default async function RootLayout({
