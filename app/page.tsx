@@ -408,7 +408,7 @@ export default function LandingPage() {
           <h2>💳 Escolha Seu Plano</h2>
           <p style={{color:"var(--primary-dark)",fontWeight:600}}>⚡ Teste grátis por 7 dias — sem cartão necessário</p>
         </div>
-        <div style={{display:"grid", gridTemplateColumns:"1fr 1fr", gap:24, maxWidth:800, margin:"0 auto", alignItems:"start"}}>
+        <div className="price-grid">
 
           {/* MENSAL — TRIAL */}
           <div className="price-card featured">
