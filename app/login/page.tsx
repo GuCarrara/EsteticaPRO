@@ -53,7 +53,7 @@ export default function LoginPage() {
 
       <div className="login-outer">
         <div className="login-card">
-          <img src="/logo.png" alt="EstéticaPro" style={{height:56, width:180, objectFit:"contain", transform:"scale(1.8)", transformOrigin:"left center"}} />
+          <div className="login-logo">Estética<span>Pro</span></div>
           <div className="login-sub">Entre na sua conta para continuar</div>
 
           <form onSubmit={handleSubmit}>
