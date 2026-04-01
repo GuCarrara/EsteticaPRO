@@ -71,12 +71,12 @@ export default function LandingPage() {
         .urgency-bar { background: var(--primary); color: #fff; font-size: 12px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; padding: 10px 0; overflow: hidden; white-space: nowrap; }
         .urgency-track { display: inline-flex; gap: 60px; animation: ticker 18s linear infinite; }
         @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-        nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid var(--light); padding: 16px 48px; display: flex; align-items: center; justify-content: space-between; }
+        nav { position: sticky; top: 0; z-index: 100; background: #1E293B; border-bottom: 1px solid rgba(255,255,255,0.08); padding: 16px 48px; display: flex; align-items: center; justify-content: space-between; }
         .logo { display: flex; align-items: center; gap: 10px; }
         .logo-text { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--dark); font-weight: 700; }
         .logo-text span { color: var(--primary); }
-        .nav-btn { border: 1.5px solid var(--primary); background: transparent; padding: 8px 24px; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; color: var(--primary); transition: all 0.2s; text-decoration: none; display: inline-block; }
-        .nav-btn:hover { background: var(--primary); color: #fff; }
+        .nav-btn { border: 1.5px solid #fff; background: transparent; padding: 8px 24px; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; color: #fff; transition: all 0.2s; text-decoration: none; display: inline-block; }
+        .nav-btn:hover { background: #fff; color: #1E293B; }
         .hero { background: var(--dark); padding: 100px 48px 80px; position: relative; overflow: hidden; min-height: 85vh; display: flex; align-items: center; }
         .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 65% 50%, rgba(79,142,247,0.15) 0%, transparent 70%); }
         .hero-content { position: relative; z-index: 2; max-width: 600px; }
@@ -230,7 +230,7 @@ export default function LandingPage() {
           .hero-mockup { display: none; }
           .como-grid, .feat-grid, .dep-grid { grid-template-columns: 1fr; }
           .pq-grid { grid-template-columns: repeat(2, 1fr); }
-          .price-grid { grid-template-columns: 1fr; }
+          .price-grid { grid-template-columns: 1fr !important; }
           .price-card.featured { transform: none; }
           .como-funciona, .funcionalidades, .pra-quem, .depoimentos, .precos, .faq, .cta-final { padding: 60px 20px; }
           .urgencia { padding: 40px 20px; }
@@ -243,7 +243,7 @@ export default function LandingPage() {
       {/* NAVBAR */}
       <nav>
         <div className="logo">
-          <img src="/logo.png" alt="EstéticaPro" style={{height:56, objectFit:"contain"}} />
+          <img src="/logo.png" alt="EstéticaPro" style={{height:80, objectFit:"contain"}} />
         </div>
         <Link href="/login" className="nav-btn">Entrar</Link>
       </nav>
