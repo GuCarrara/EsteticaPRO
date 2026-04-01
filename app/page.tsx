@@ -33,14 +33,8 @@ export default function LandingPage() {
   }, []);
 
   useEffect(() => {
-    const alreadyShown = sessionStorage.getItem("wpp_chat_shown");
-    if (!alreadyShown) {
-      const t = setTimeout(() => {
-        setChatOpen(true);
-        sessionStorage.setItem("wpp_chat_shown", "true");
-      }, 8000);
-      return () => clearTimeout(t);
-    }
+    const t = setTimeout(() => setChatOpen(true), 8000);
+    return () => clearTimeout(t);
   }, []);
 
   useEffect(() => {
@@ -78,6 +72,9 @@ export default function LandingPage() {
         .urgency-track { display: inline-flex; gap: 60px; animation: ticker 18s linear infinite; }
         @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
         nav { position: sticky; top: 0; z-index: 100; background: #1E293B; border-bottom: 1px solid rgba(255,255,255,0.08); padding: 16px 48px; display: flex; align-items: center; justify-content: space-between; }
+        .logo { display: flex; align-items: center; gap: 10px; }
+        .logo-text { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--dark); font-weight: 700; }
+        .logo-text span { color: var(--primary); }
         .nav-btn { border: 1.5px solid #fff; background: transparent; padding: 8px 24px; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; color: #fff; transition: all 0.2s; text-decoration: none; display: inline-block; }
         .nav-btn:hover { background: #fff; color: #1E293B; }
         .hero { background: var(--dark); padding: 100px 48px 80px; position: relative; overflow: hidden; min-height: 85vh; display: flex; align-items: center; }
@@ -91,7 +88,25 @@ export default function LandingPage() {
         .btn-primary { background: var(--primary); color: #fff; border: none; padding: 18px 48px; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 700; letter-spacing: 0.5px; cursor: pointer; box-shadow: 0 8px 32px rgba(79,142,247,0.4); text-decoration: none; display: inline-block; transition: background 0.2s; }
         .btn-primary:hover { background: var(--primary-dark); }
         .cta-note { font-size: 13px; color: rgba(250,250,248,0.45); }
-        .hero-mockup { position: absolute; right: -20px; top: 50%; transform: translateY(-50%); width: 520px; height: 400px; border-radius: 16px; overflow: hidden; box-shadow: -40px 0 80px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.08); }
+        .hero-mockup { position: absolute; right: -20px; top: 50%; transform: translateY(-50%); width: 520px; background: #1E293B; border-radius: 16px; border: 1px solid rgba(255,255,255,0.08); overflow: hidden; box-shadow: -40px 0 80px rgba(0,0,0,0.5); }
+        .mockup-bar { background: #0F172A; padding: 12px 16px; display: flex; align-items: center; gap: 8px; }
+        .mockup-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .mockup-url { flex: 1; background: #1E293B; border-radius: 4px; padding: 4px 12px; font-size: 11px; color: #64748B; margin: 0 8px; font-family: monospace; }
+        .mockup-body { padding: 20px; }
+        .mockup-header { color: var(--primary); font-size: 13px; font-weight: 600; margin-bottom: 16px; }
+        .mockup-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 16px; }
+        .mockup-card { border-radius: 8px; padding: 10px 8px; text-align: center; }
+        .mc-blue { background: rgba(79,142,247,0.15); border: 1px solid rgba(79,142,247,0.3); }
+        .mc-green { background: rgba(22,163,74,0.15); border: 1px solid rgba(22,163,74,0.3); }
+        .mc-orange { background: rgba(234,88,12,0.15); border: 1px solid rgba(234,88,12,0.3); }
+        .mc-icon { font-size: 18px; margin-bottom: 4px; }
+        .mc-label { font-size: 9px; color: #94A3B8; }
+        .mc-val { font-size: 18px; font-weight: 700; }
+        .mockup-table { width: 100%; border-collapse: collapse; font-size: 10px; }
+        .mockup-table th { color: #64748B; font-weight: 500; padding: 4px 6px; text-align: left; border-bottom: 1px solid #334155; }
+        .mockup-table td { color: #CBD5E1; padding: 6px 6px; border-bottom: 1px solid #1E293B; }
+        .tag-green { background: rgba(22,163,74,0.2); color: #4ade80; padding: 2px 6px; border-radius: 4px; font-size: 9px; }
+        .tag-orange { background: rgba(234,88,12,0.2); color: #fb923c; padding: 2px 6px; border-radius: 4px; font-size: 9px; }
         .section-tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--primary); margin-bottom: 12px; }
         .section-header { text-align: center; margin-bottom: 60px; }
         .section-header h2 { font-family: 'Playfair Display', serif; font-size: clamp(32px, 4vw, 48px); color: var(--dark); margin-bottom: 16px; }
@@ -142,12 +157,13 @@ export default function LandingPage() {
         .countdown { font-family: 'Playfair Display', serif; font-size: 40px; font-weight: 900; color: var(--primary); letter-spacing: 2px; margin-bottom: 12px; }
         .urg-note { font-size: 12px; color: #aaa; }
         .precos { padding: 100px 48px; background: var(--white); }
-        .price-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 800px; margin: 0 auto; align-items: start; }
+        .price-grid { display: grid; grid-template-columns: 1fr 1.15fr; gap: 24px; max-width: 760px; margin: 0 auto; align-items: start; }
         .price-card { border-radius: 20px; padding: 36px 28px; border: 1.5px solid var(--light); position: relative; }
         .price-card.featured { background: linear-gradient(160deg, #EFF6FF 0%, #DBEAFE 100%); border-color: var(--primary); box-shadow: 0 24px 64px rgba(79,142,247,0.2); transform: translateY(-8px); }
         .price-badge { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: var(--primary); color: #fff; padding: 6px 20px; border-radius: 100px; font-size: 11px; font-weight: 700; letter-spacing: 1px; white-space: nowrap; }
         .price-tag { font-size: 12px; color: var(--gray); margin-bottom: 8px; text-align: center; }
         .price-name { font-family: 'Playfair Display', serif; font-size: 28px; text-align: center; margin-bottom: 8px; color: var(--dark); }
+        .price-save { background: #DBEAFE; color: var(--primary-dark); font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 100px; text-align: center; margin-bottom: 12px; }
         .price-old { text-align: center; font-size: 13px; color: #aaa; text-decoration: line-through; margin-bottom: 4px; }
         .price-val { text-align: center; margin-bottom: 4px; }
         .price-val strong { font-size: 44px; font-weight: 800; color: var(--primary); font-family: 'Playfair Display', serif; }
@@ -172,7 +188,7 @@ export default function LandingPage() {
         .wpp-bubble { background: #fff; border-radius: 16px 16px 0 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); width: 300px; overflow: hidden; transform-origin: bottom right; transition: opacity 0.3s, transform 0.3s; opacity: 0; transform: scale(0.85) translateY(10px); pointer-events: none; }
         .wpp-bubble.visible { opacity: 1; transform: scale(1) translateY(0); pointer-events: all; }
         .wpp-header { background: var(--wpp-dark); padding: 12px 16px; display: flex; align-items: center; gap: 10px; }
-        .wpp-avatar { width: 36px; height: 36px; border-radius: 50%; overflow: hidden; flex-shrink: 0; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; }
+        .wpp-avatar { width: 36px; height: 36px; border-radius: 50%; overflow: hidden; flex-shrink: 0; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 18px; }
         .wpp-header-name { font-size: 13px; font-weight: 700; color: #fff; }
         .wpp-header-status { font-size: 11px; color: rgba(255,255,255,0.7); }
         .wpp-close { background: none; border: none; color: rgba(255,255,255,0.7); cursor: pointer; font-size: 18px; padding: 2px 4px; line-height: 1; margin-left: auto; }
@@ -220,14 +236,14 @@ export default function LandingPage() {
           .urgencia { padding: 40px 20px; }
           footer { flex-direction: column; gap: 12px; padding: 20px; text-align: center; }
           .wpp-bubble { width: 270px; }
-          .wpp-float { bottom: 80px; right: 16px; }
+          .wpp-float { bottom: 16px; right: 16px; }
         }
       `}</style>
 
       {/* NAVBAR */}
       <nav>
-        <div>
-          <img src="/logo.png" alt="EstéticaPro" style={{height:56, width:180, objectFit:"contain", transform:"scale(1.8)", transformOrigin:"left center"}} />
+        <div className="logo">
+          <img src="/logo.png" alt="EstéticaPro" style={{height:80, objectFit:"contain"}} />
         </div>
         <Link href="/login" className="nav-btn">Entrar</Link>
       </nav>
@@ -254,14 +270,28 @@ export default function LandingPage() {
           </div>
         </div>
         <div className="hero-mockup">
-          <video
-            src="/video1.mp4"
-            autoPlay
-            loop
-            muted
-            playsInline
-            style={{width:"100%", height:"100%", objectFit:"cover", display:"block"}}
-          />
+          <div className="mockup-bar">
+            <div className="mockup-dot" style={{background:"#FF5F57"}}></div>
+            <div className="mockup-dot" style={{background:"#FFBD2E"}}></div>
+            <div className="mockup-dot" style={{background:"#28C840"}}></div>
+            <div className="mockup-url">esteticapro.com.br/dashboard</div>
+          </div>
+          <div className="mockup-body">
+            <div className="mockup-header">🚗 EstéticaPro — Hoje, 15 de Abril</div>
+            <div className="mockup-cards">
+              <div className="mockup-card mc-blue"><div className="mc-icon">📅</div><div className="mc-label">Agendamentos</div><div className="mc-val" style={{color:"#60A5FA"}}>4</div></div>
+              <div className="mockup-card mc-green"><div className="mc-icon">✅</div><div className="mc-label">Concluídos</div><div className="mc-val" style={{color:"#4ade80"}}>2</div></div>
+              <div className="mockup-card mc-orange"><div className="mc-icon">🕐</div><div className="mc-label">Próximo</div><div className="mc-val" style={{color:"#fb923c"}}>14h</div></div>
+            </div>
+            <table className="mockup-table">
+              <thead><tr><th>Cliente</th><th>Veículo</th><th>Serviço</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>João Silva</td><td>Gol 2018</td><td>Lavagem</td><td><span className="tag-green">Confirmado</span></td></tr>
+                <tr><td>Maria Souza</td><td>Civic 2020</td><td>Polimento</td><td><span className="tag-orange">Pendente</span></td></tr>
+                <tr><td>Carlos M.</td><td>Hilux 2021</td><td>Vitrificação</td><td><span className="tag-orange">Pendente</span></td></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
@@ -344,8 +374,8 @@ export default function LandingPage() {
         </div>
         <div className="dep-grid">
           {[
-            {name:"Ricardo Oliveira", biz:"Auto Estética Premium — São Paulo/SP", stars:"⭐⭐⭐⭐⭐", text:"Antes eu anotava tudo no caderno e sempre esquecia algum agendamento. Com o EstéticaPro tudo ficou organizado e os clientes adoram receber a confirmação pelo WhatsApp."},
-            {name:"Fernanda Costa", biz:"Lava Car Express — Campinas/SP", stars:"⭐⭐⭐⭐⭐", text:"O sistema é muito fácil de usar. Em menos de 30 minutos já tinha cadastrado todos os meus clientes e veículos. Recomendo para qualquer estética."},
+            {name:"Ricardo Oliveira", biz:"Elite Detail Studio — São Paulo/SP", stars:"⭐⭐⭐⭐⭐", text:"Antes eu anotava tudo no caderno e sempre esquecia algum agendamento. Com o EstéticaPro tudo ficou organizado e os clientes adoram receber a confirmação pelo WhatsApp."},
+            {name:"Fernando Costa", biz:"Lava Car Express — Campinas/SP", stars:"⭐⭐⭐⭐⭐", text:"O sistema é muito fácil de usar. Em menos de 30 minutos já tinha cadastrado todos os meus clientes e veículos. Recomendo para qualquer estética."},
             {name:"Paulo Henrique", biz:"Top Polimentos — Ribeirão Preto/SP", stars:"⭐⭐⭐⭐⭐", text:"Finalmente consigo ver no dashboard quantos carros tenho para atender hoje. O botão de WhatsApp economiza muito tempo na confirmação dos agendamentos."},
           ].map((d, i) => (
             <div key={i} className="dep-card">
@@ -379,6 +409,7 @@ export default function LandingPage() {
           <p style={{color:"var(--primary-dark)",fontWeight:600}}>⚡ Teste grátis por 7 dias — sem cartão necessário</p>
         </div>
         <div className="price-grid">
+
           {/* MENSAL — TRIAL */}
           <div className="price-card featured">
             <div className="price-badge">🎁 MAIS POPULAR</div>
@@ -417,9 +448,10 @@ export default function LandingPage() {
             </Link>
             <div className="price-secure" style={{color:"#64748B"}}>🔒 Pagamento 100% seguro</div>
           </div>
+
         </div>
       </section>
-
+      
       {/* FAQ */}
       <section className="faq">
         <div className="section-header">
@@ -471,8 +503,8 @@ export default function LandingPage() {
         <div className={`wpp-bubble ${chatOpen ? "visible" : ""}`}>
           <div className="wpp-header">
             <div className="wpp-avatar">
-              <img src="/logo.png" alt="EstéticaPro" style={{width:"100%", height:"100%", objectFit:"cover", borderRadius:"50%"}} />
-            </div>
+  <img src="/logo.png" alt="EstéticaPro" style={{width:"100%", height:"100%", objectFit:"cover", borderRadius:"50%"}} />
+</div>
             <div style={{flex:1}}>
               <div className="wpp-header-name">EstéticaPro</div>
               <div className="wpp-header-status">● Online agora</div>
