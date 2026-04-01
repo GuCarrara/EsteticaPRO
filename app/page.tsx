@@ -374,13 +374,15 @@ export default function LandingPage() {
         </div>
         <div className="dep-grid">
           {[
-            {name:"Ricardo Oliveira", biz:"Elite Detail Studio — São Paulo/SP", stars:"⭐⭐⭐⭐⭐", text:"Antes eu anotava tudo no caderno e sempre esquecia algum agendamento. Com o EstéticaPro tudo ficou organizado e os clientes adoram receber a confirmação pelo WhatsApp."},
-            {name:"Fernando Costa", biz:"Lava Car Express — Campinas/SP", stars:"⭐⭐⭐⭐⭐", text:"O sistema é muito fácil de usar. Em menos de 30 minutos já tinha cadastrado todos os meus clientes e veículos. Recomendo para qualquer estética."},
-            {name:"Paulo Henrique", biz:"Top Polimentos — Ribeirão Preto/SP", stars:"⭐⭐⭐⭐⭐", text:"Finalmente consigo ver no dashboard quantos carros tenho para atender hoje. O botão de WhatsApp economiza muito tempo na confirmação dos agendamentos."},
+            {name:"Ricardo Oliveira", biz:"Auto Estética Premium — São Paulo/SP", stars:"⭐⭐⭐⭐⭐", text:"Antes eu anotava tudo no caderno e sempre esquecia algum agendamento. Com o EstéticaPro tudo ficou organizado e os clientes adoram receber a confirmação pelo WhatsApp.", foto:"/ricardo.jpeg"},
+            {name:"Fernanda Costa", biz:"Lava Car Express — Campinas/SP", stars:"⭐⭐⭐⭐⭐", text:"O sistema é muito fácil de usar. Em menos de 30 minutos já tinha cadastrado todos os meus clientes e veículos. Recomendo para qualquer estética.", foto:"/fernando.jpeg"},
+            {name:"Paulo Henrique", biz:"Top Polimentos — Ribeirão Preto/SP", stars:"⭐⭐⭐⭐⭐", text:"Finalmente consigo ver no dashboard quantos carros tenho para atender hoje. O botão de WhatsApp economiza muito tempo na confirmação dos agendamentos.", foto:"/paulo.jpeg"},
           ].map((d, i) => (
             <div key={i} className="dep-card">
               <div className="dep-header">
-                <div className="dep-avatar">🚗</div>
+                <div className="dep-avatar" style={{overflow:"hidden", padding:0}}>
+                  <img src={d.foto} alt={d.name} style={{width:"100%", height:"100%", objectFit:"cover"}} />
+                </div>
                 <div><div className="dep-name">{d.name}</div><div className="dep-biz">{d.biz}</div></div>
               </div>
               <div style={{marginBottom:12}}>{d.stars}</div>
