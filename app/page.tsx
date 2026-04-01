@@ -502,7 +502,9 @@ export default function LandingPage() {
       <div className="wpp-float">
         <div className={`wpp-bubble ${chatOpen ? "visible" : ""}`}>
           <div className="wpp-header">
-            <div className="wpp-avatar">🚗</div>
+            <div className="wpp-avatar">
+  <img src="/logo.png" alt="EstéticaPro" style={{width:"100%", height:"100%", objectFit:"cover", borderRadius:"50%"}} />
+</div>
             <div style={{flex:1}}>
               <div className="wpp-header-name">EstéticaPro</div>
               <div className="wpp-header-status">● Online agora</div>
