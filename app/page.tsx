@@ -3,14 +3,38 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 
 const faqData = [
-  { q: "Não entendo de tecnologia. Vou conseguir usar?", a: "Sim! O EstéticaPro foi criado pensando em donos de estética, não em programadores. A interface é simples, intuitiva e você começa a usar em minutos." },
+  { q: "Não entendo de tecnologia. Vou conseguir usar?", a: "Sim! O EstéticaPro foi criado pensando em donos de estética, não em programadores. A interface é simples, intuitiva e você começa a usar em minutos — sem tutoriais complicados." },
   { q: "Funciona em qualquer dispositivo?", a: "Sim! O EstéticaPro funciona no celular, tablet e computador — basta ter acesso à internet. Nenhum aplicativo para instalar." },
   { q: "Posso cancelar quando quiser?", a: "Sim. O plano mensal pode ser cancelado a qualquer momento, sem multa e sem burocracia. Você tem controle total." },
   { q: "Como funciona a confirmação pelo WhatsApp?", a: "Ao criar um agendamento, você envia a confirmação direto pelo WhatsApp do cliente com um clique. O sistema monta a mensagem automaticamente." },
   { q: "Posso cadastrar vários veículos por cliente?", a: "Sim! Cada cliente pode ter quantos veículos quiser cadastrados. Assim você tem o histórico completo de cada carro." },
   { q: "É seguro? Meus dados ficam protegidos?", a: "Totalmente seguro. Seus dados ficam em servidores protegidos com criptografia. Nenhuma informação sua é compartilhada com terceiros." },
-  { q: "Tem limite de agendamentos?", a: "No plano Anual os agendamentos e clientes são ilimitados. No plano Mensal você pode cadastrar até 100 agendamentos por mês." },
-  { q: "Posso testar antes de assinar?", a: "Sim! Entre em contato pelo WhatsApp e nossa equipe faz uma demonstração ao vivo com você, mostrando tudo que o sistema faz pelo seu negócio." },
+  { q: "Preciso instalar algum aplicativo?", a: "Não! O EstéticaPro é 100% web. Funciona direto no navegador do celular, tablet ou computador. Sem download, sem instalação." },
+  { q: "Posso testar antes de assinar?", a: "Sim! Você tem 7 dias grátis para testar tudo, sem precisar colocar cartão. Se não gostar, é só não assinar." },
+];
+
+const depoimentosData = [
+  {
+    nome: "Ricardo Oliveira",
+    negocio: "Auto Estética Premium — São Paulo/SP",
+    foto: "/ricardo.jpeg",
+    frase: "Antes eu esquecia agendamento toda semana",
+    texto: "Antes eu anotava tudo no caderno e sempre esquecia algum agendamento. Com o EstéticaPro tudo ficou organizado e os clientes adoram receber a confirmação pelo WhatsApp.",
+  },
+  {
+    nome: "Fernando Costa",
+    negocio: "Lava Car Express — Campinas/SP",
+    foto: "/fernando.jpeg",
+    frase: "Em 30 minutos já tinha tudo cadastrado",
+    texto: "O sistema é muito fácil de usar. Em menos de 30 minutos já tinha cadastrado todos os meus clientes e veículos. Recomendo para qualquer estética.",
+  },
+  {
+    nome: "Paulo Henrique",
+    negocio: "Top Polimentos — Ribeirão Preto/SP",
+    foto: "/paulo.jpeg",
+    frase: "O WhatsApp automático economiza muito tempo",
+    texto: "Finalmente consigo ver no dashboard quantos carros tenho para atender hoje. O botão de WhatsApp economiza muito tempo na confirmação dos agendamentos.",
+  },
 ];
 
 export default function LandingPage() {
@@ -33,8 +57,14 @@ export default function LandingPage() {
   }, []);
 
   useEffect(() => {
-    const t = setTimeout(() => setChatOpen(true), 8000);
-    return () => clearTimeout(t);
+    const alreadyShown = sessionStorage.getItem("wpp_chat_shown");
+    if (!alreadyShown) {
+      const t = setTimeout(() => {
+        setChatOpen(true);
+        sessionStorage.setItem("wpp_chat_shown", "true");
+      }, 8000);
+      return () => clearTimeout(t);
+    }
   }, []);
 
   useEffect(() => {
@@ -72,98 +102,118 @@ export default function LandingPage() {
         .urgency-track { display: inline-flex; gap: 60px; animation: ticker 18s linear infinite; }
         @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
         nav { position: sticky; top: 0; z-index: 100; background: #1E293B; border-bottom: 1px solid rgba(255,255,255,0.08); padding: 16px 48px; display: flex; align-items: center; justify-content: space-between; }
-        .logo { display: flex; align-items: center; gap: 10px; }
-        .logo-text { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--dark); font-weight: 700; }
-        .logo-text span { color: var(--primary); }
         .nav-btn { border: 1.5px solid #fff; background: transparent; padding: 8px 24px; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; color: #fff; transition: all 0.2s; text-decoration: none; display: inline-block; }
         .nav-btn:hover { background: #fff; color: #1E293B; }
         .hero { background: var(--dark); padding: 100px 48px 80px; position: relative; overflow: hidden; min-height: 85vh; display: flex; align-items: center; }
         .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 65% 50%, rgba(79,142,247,0.15) 0%, transparent 70%); }
         .hero-content { position: relative; z-index: 2; max-width: 600px; }
         .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(79,142,247,0.15); border: 1px solid rgba(79,142,247,0.4); color: #93C5FD; padding: 6px 16px; border-radius: 100px; font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 32px; }
+        .hero-social-proof { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; }
+        .hero-avatars { display: flex; }
+        .hero-avatar { width: 36px; height: 36px; border-radius: 50%; border: 2px solid #1E293B; margin-left: -8px; overflow: hidden; }
+        .hero-avatar:first-child { margin-left: 0; }
+        .hero-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .hero-social-text { font-size: 13px; color: rgba(255,255,255,0.6); }
+        .hero-social-text strong { color: #fff; }
         .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(42px, 5vw, 64px); line-height: 1.1; color: var(--white); margin-bottom: 24px; }
         .hero h1 em { color: #93C5FD; font-style: normal; }
         .hero p { font-size: 18px; line-height: 1.7; color: rgba(255,255,255,0.65); margin-bottom: 48px; max-width: 480px; }
         .hero-cta { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+        .hero-cta-checks { display: flex; gap: 20px; margin-top: 8px; flex-wrap: wrap; }
+        .hero-check { display: flex; align-items: center; gap: 6px; font-size: 13px; color: rgba(255,255,255,0.6); }
+        .hero-check-icon { color: #4ade80; font-size: 14px; }
         .btn-primary { background: var(--primary); color: #fff; border: none; padding: 18px 48px; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 700; letter-spacing: 0.5px; cursor: pointer; box-shadow: 0 8px 32px rgba(79,142,247,0.4); text-decoration: none; display: inline-block; transition: background 0.2s; }
         .btn-primary:hover { background: var(--primary-dark); }
-        .cta-note { font-size: 13px; color: rgba(250,250,248,0.45); }
-        .hero-mockup { position: absolute; right: -20px; top: 50%; transform: translateY(-50%); width: 520px; background: #1E293B; border-radius: 16px; border: 1px solid rgba(255,255,255,0.08); overflow: hidden; box-shadow: -40px 0 80px rgba(0,0,0,0.5); }
-        .mockup-bar { background: #0F172A; padding: 12px 16px; display: flex; align-items: center; gap: 8px; }
-        .mockup-dot { width: 10px; height: 10px; border-radius: 50%; }
-        .mockup-url { flex: 1; background: #1E293B; border-radius: 4px; padding: 4px 12px; font-size: 11px; color: #64748B; margin: 0 8px; font-family: monospace; }
-        .mockup-body { padding: 20px; }
-        .mockup-header { color: var(--primary); font-size: 13px; font-weight: 600; margin-bottom: 16px; }
-        .mockup-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 16px; }
-        .mockup-card { border-radius: 8px; padding: 10px 8px; text-align: center; }
-        .mc-blue { background: rgba(79,142,247,0.15); border: 1px solid rgba(79,142,247,0.3); }
-        .mc-green { background: rgba(22,163,74,0.15); border: 1px solid rgba(22,163,74,0.3); }
-        .mc-orange { background: rgba(234,88,12,0.15); border: 1px solid rgba(234,88,12,0.3); }
-        .mc-icon { font-size: 18px; margin-bottom: 4px; }
-        .mc-label { font-size: 9px; color: #94A3B8; }
-        .mc-val { font-size: 18px; font-weight: 700; }
-        .mockup-table { width: 100%; border-collapse: collapse; font-size: 10px; }
-        .mockup-table th { color: #64748B; font-weight: 500; padding: 4px 6px; text-align: left; border-bottom: 1px solid #334155; }
-        .mockup-table td { color: #CBD5E1; padding: 6px 6px; border-bottom: 1px solid #1E293B; }
-        .tag-green { background: rgba(22,163,74,0.2); color: #4ade80; padding: 2px 6px; border-radius: 4px; font-size: 9px; }
-        .tag-orange { background: rgba(234,88,12,0.2); color: #fb923c; padding: 2px 6px; border-radius: 4px; font-size: 9px; }
+        .hero-mockup { position: absolute; right: -20px; top: 50%; transform: translateY(-50%); width: 520px; height: 400px; border-radius: 16px; overflow: hidden; box-shadow: -40px 0 80px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.08); }
         .section-tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--primary); margin-bottom: 12px; }
         .section-header { text-align: center; margin-bottom: 60px; }
         .section-header h2 { font-family: 'Playfair Display', serif; font-size: clamp(32px, 4vw, 48px); color: var(--dark); margin-bottom: 16px; }
         .section-header p { font-size: 17px; color: var(--gray); max-width: 540px; margin: 0 auto; line-height: 1.7; }
-        .como-funciona { padding: 100px 48px; background: var(--white); }
-        .como-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; max-width: 1000px; margin: 0 auto; }
-        .como-text p { font-size: 17px; color: var(--gray); line-height: 1.8; margin-bottom: 20px; }
-        .como-text strong { color: var(--dark); }
-        .devices-mock { background: var(--cream); border-radius: 16px; padding: 32px; display: flex; flex-direction: column; align-items: center; gap: 12px; border: 1px solid var(--light); }
-        .device-laptop { width: 100%; background: var(--dark); border-radius: 8px; padding: 12px; border: 2px solid #334155; }
-        .device-row { display: flex; gap: 12px; width: 100%; }
-        .device-phone { width: 80px; background: var(--dark); border-radius: 12px; padding: 8px; border: 2px solid #334155; flex-shrink: 0; }
-        .device-tablet { flex: 1; background: var(--dark); border-radius: 8px; padding: 8px; border: 2px solid #334155; }
-        .device-screen { background: #0F172A; border-radius: 4px; padding: 6px; min-height: 60px; }
-        .ds-title { font-size: 7px; color: var(--primary); font-weight: 600; margin-bottom: 4px; }
-        .ds-bar { height: 3px; border-radius: 2px; margin-bottom: 3px; }
-        .ds-gold { background: var(--primary); width: 70%; }
-        .ds-gray { background: #334155; width: 90%; }
-        .ds-sm { background: #334155; width: 50%; }
-        .funcionalidades { padding: 100px 48px; background: var(--cream); }
+
+        /* NÚMEROS */
+        .numeros { background: var(--dark); padding: 60px 48px; }
+        .numeros-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; max-width: 900px; margin: 0 auto; text-align: center; }
+        .numero-val { font-family: 'Playfair Display', serif; font-size: 48px; font-weight: 900; color: var(--primary); line-height: 1; margin-bottom: 8px; }
+        .numero-label { font-size: 14px; color: rgba(255,255,255,0.55); line-height: 1.5; }
+
+        /* PARA QUEM */
+        .para-quem { padding: 100px 48px; background: var(--cream); }
+        .para-quem-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; max-width: 1100px; margin: 0 auto; }
+        .para-quem-card { background: var(--white); border-radius: 16px; overflow: hidden; border: 1px solid var(--light); transition: transform 0.2s, box-shadow 0.2s; }
+        .para-quem-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(79,142,247,0.12); }
+        .para-quem-img { width: 100%; height: 140px; object-fit: cover; }
+        .para-quem-body { padding: 16px; }
+        .para-quem-title { font-size: 15px; font-weight: 700; color: var(--dark); margin-bottom: 6px; }
+        .para-quem-text { font-size: 13px; color: var(--gray); line-height: 1.6; }
+
+        /* FUNCIONALIDADES */
+        .funcionalidades { padding: 100px 48px; background: var(--white); }
         .feat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1100px; margin: 0 auto; }
-        .feat-card { background: var(--white); border-radius: 16px; padding: 32px 28px; border: 1px solid var(--light); transition: transform 0.2s, box-shadow 0.2s; }
-        .feat-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(79,142,247,0.12); }
+        .feat-card { background: var(--cream); border-radius: 16px; padding: 32px 28px; border: 1px solid var(--light); transition: transform 0.2s, box-shadow 0.2s; }
+        .feat-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(79,142,247,0.12); background: var(--white); }
         .feat-icon { width: 48px; height: 48px; background: var(--primary-light); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 20px; }
         .feat-card h3 { font-size: 17px; font-weight: 700; color: var(--dark); margin-bottom: 12px; }
         .feat-card p { font-size: 14px; color: var(--gray); line-height: 1.7; }
-        .pra-quem { padding: 100px 48px; background: var(--dark); }
-        .pra-quem .section-header h2 { color: var(--white); }
-        .pra-quem .section-header p { color: rgba(255,255,255,0.5); }
-        .pra-quem .section-tag { color: #93C5FD; }
-        .pq-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; max-width: 1100px; margin: 0 auto; }
-        .pq-card { background: rgba(79,142,247,0.08); border: 1px solid rgba(79,142,247,0.2); border-radius: 16px; padding: 28px 20px; text-align: center; }
-        .pq-icon { font-size: 32px; margin-bottom: 12px; }
-        .pq-card h3 { font-size: 14px; font-weight: 700; color: var(--white); margin-bottom: 8px; }
-        .pq-card p { font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.6; }
+
+        /* MAIS SIMPLES */
+        .mais-simples { padding: 80px 48px; background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); }
+        .mais-simples-inner { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+        .mais-simples h2 { font-family: 'Playfair Display', serif; font-size: clamp(28px, 3vw, 42px); color: #fff; margin-bottom: 20px; line-height: 1.2; }
+        .mais-simples h2 em { color: #93C5FD; font-style: normal; }
+        .mais-simples p { font-size: 16px; color: rgba(255,255,255,0.6); line-height: 1.8; margin-bottom: 32px; }
+        .simples-item { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px; }
+        .simples-icon { width: 36px; height: 36px; border-radius: 8px; background: rgba(79,142,247,0.15); border: 1px solid rgba(79,142,247,0.3); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+        .simples-text h4 { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+        .simples-text p { font-size: 13px; color: rgba(255,255,255,0.5); margin: 0; line-height: 1.5; }
+        .simples-vs { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 28px; }
+        .vs-title { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; text-align: center; }
+        .vs-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 13px; }
+        .vs-row:last-child { border-bottom: none; }
+        .vs-label { color: rgba(255,255,255,0.6); }
+        .vs-nos { color: #4ade80; font-weight: 700; }
+        .vs-eles { color: #f87171; }
+
+        /* DEPOIMENTOS */
         .depoimentos { padding: 100px 48px; background: var(--cream); }
         .dep-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1100px; margin: 0 auto; }
         .dep-card { background: var(--white); border-radius: 16px; padding: 28px; border: 1px solid var(--light); }
-        .dep-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-        .dep-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--primary-light); display: flex; align-items: center; justify-content: center; font-size: 18px; }
-        .dep-name { font-weight: 700; font-size: 14px; color: var(--dark); }
-        .dep-biz { font-size: 12px; color: var(--gray); }
-        .wpp-badge { display: inline-flex; align-items: center; gap: 4px; background: #dcfce7; color: #16a34a; font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 4px; margin-top: 8px; }
+        .dep-foto { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; margin-bottom: 16px; border: 3px solid var(--primary-light); }
+        .dep-frase { font-size: 16px; font-weight: 700; color: var(--dark); margin-bottom: 12px; line-height: 1.4; }
+        .dep-texto { font-size: 14px; color: var(--gray); line-height: 1.7; margin-bottom: 16px; }
+        .dep-footer { display: flex; align-items: center; justify-content: space-between; }
+        .dep-nome { font-size: 13px; font-weight: 700; color: var(--dark); }
+        .dep-negocio { font-size: 11px; color: var(--gray); margin-top: 2px; }
+        .dep-stars { color: #F59E0B; font-size: 13px; }
+        .wpp-badge { display: inline-flex; align-items: center; gap: 4px; background: #dcfce7; color: #16a34a; font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 4px; }
+
+        /* CTA TRIAL */
+        .cta-trial { padding: 80px 48px; background: var(--primary); text-align: center; }
+        .cta-trial h2 { font-family: 'Playfair Display', serif; font-size: clamp(28px, 3vw, 42px); color: #fff; margin-bottom: 16px; }
+        .cta-trial p { font-size: 17px; color: rgba(255,255,255,0.8); margin-bottom: 40px; }
+        .cta-trial-cards { display: flex; justify-content: center; gap: 16px; margin-bottom: 32px; flex-wrap: wrap; }
+        .cta-trial-card { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); border-radius: 12px; padding: 16px 24px; display: flex; align-items: center; gap: 12px; }
+        .cta-trial-card-icon { font-size: 24px; }
+        .cta-trial-card-title { font-size: 14px; font-weight: 700; color: #fff; }
+        .cta-trial-card-sub { font-size: 12px; color: rgba(255,255,255,0.7); }
+        .btn-white { background: #fff; color: var(--primary); border: none; padding: 18px 48px; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; }
+        .btn-white:hover { background: #f1f5f9; }
+
+        /* URGÊNCIA */
         .urgencia { padding: 60px 48px; background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%); border-top: 2px solid #BFDBFE; border-bottom: 2px solid #BFDBFE; text-align: center; }
         .urg-box { max-width: 560px; margin: 0 auto; background: var(--white); border-radius: 16px; padding: 40px; border: 1.5px solid #BFDBFE; box-shadow: 0 8px 32px rgba(79,142,247,0.12); }
         .urg-title { font-size: 22px; font-weight: 800; color: var(--primary-dark); margin-bottom: 8px; }
         .urg-sub { font-size: 15px; color: var(--gray); margin-bottom: 16px; }
         .countdown { font-family: 'Playfair Display', serif; font-size: 40px; font-weight: 900; color: var(--primary); letter-spacing: 2px; margin-bottom: 12px; }
         .urg-note { font-size: 12px; color: #aaa; }
+
+        /* PREÇOS */
         .precos { padding: 100px 48px; background: var(--white); }
-        .price-grid { display: grid; grid-template-columns: 1fr 1.15fr; gap: 24px; max-width: 760px; margin: 0 auto; align-items: start; }
+        .price-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 800px; margin: 0 auto; align-items: start; }
         .price-card { border-radius: 20px; padding: 36px 28px; border: 1.5px solid var(--light); position: relative; }
         .price-card.featured { background: linear-gradient(160deg, #EFF6FF 0%, #DBEAFE 100%); border-color: var(--primary); box-shadow: 0 24px 64px rgba(79,142,247,0.2); transform: translateY(-8px); }
         .price-badge { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: var(--primary); color: #fff; padding: 6px 20px; border-radius: 100px; font-size: 11px; font-weight: 700; letter-spacing: 1px; white-space: nowrap; }
         .price-tag { font-size: 12px; color: var(--gray); margin-bottom: 8px; text-align: center; }
         .price-name { font-family: 'Playfair Display', serif; font-size: 28px; text-align: center; margin-bottom: 8px; color: var(--dark); }
-        .price-save { background: #DBEAFE; color: var(--primary-dark); font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 100px; text-align: center; margin-bottom: 12px; }
         .price-old { text-align: center; font-size: 13px; color: #aaa; text-decoration: line-through; margin-bottom: 4px; }
         .price-val { text-align: center; margin-bottom: 4px; }
         .price-val strong { font-size: 44px; font-weight: 800; color: var(--primary); font-family: 'Playfair Display', serif; }
@@ -174,21 +224,24 @@ export default function LandingPage() {
         .price-item { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--gray); margin-bottom: 8px; line-height: 1.5; }
         .pi-check { color: var(--primary); flex-shrink: 0; margin-top: 1px; }
         .price-btn { width: 100%; padding: 14px; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 24px; border: none; font-family: 'DM Sans', sans-serif; }
-        .price-btn.secondary { background: var(--white); border: 1.5px solid var(--light); color: var(--dark); }
         .price-btn.primary-btn { background: var(--primary); color: #fff; box-shadow: 0 8px 24px rgba(79,142,247,0.3); }
         .price-btn.primary-btn:hover { background: var(--primary-dark); }
         .price-secure { text-align: center; font-size: 11px; color: #aaa; margin-top: 10px; }
+
+        /* FAQ */
         .faq { padding: 100px 48px; background: var(--cream); }
         .faq-inner { max-width: 720px; margin: 0 auto; }
         .faq-trigger { width: 100%; background: none; border: none; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; text-align: left; font-family: 'DM Sans', sans-serif; }
         .faq-q { font-size: 15px; font-weight: 600; color: var(--dark); flex: 1; padding-right: 16px; }
         .faq-icon { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; transition: background 0.2s, transform 0.3s; user-select: none; }
         .faq-answer { font-size: 14px; color: var(--gray); line-height: 1.75; border-top: 1px solid var(--light); padding: 16px 24px 20px; margin: 0; }
+
+        /* WHATSAPP FLOAT */
         .wpp-float { position: fixed; bottom: 28px; right: 28px; z-index: 9999; display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }
         .wpp-bubble { background: #fff; border-radius: 16px 16px 0 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); width: 300px; overflow: hidden; transform-origin: bottom right; transition: opacity 0.3s, transform 0.3s; opacity: 0; transform: scale(0.85) translateY(10px); pointer-events: none; }
         .wpp-bubble.visible { opacity: 1; transform: scale(1) translateY(0); pointer-events: all; }
         .wpp-header { background: var(--wpp-dark); padding: 12px 16px; display: flex; align-items: center; gap: 10px; }
-        .wpp-avatar { width: 36px; height: 36px; border-radius: 50%; overflow: hidden; flex-shrink: 0; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .wpp-avatar { width: 36px; height: 36px; border-radius: 50%; overflow: hidden; flex-shrink: 0; }
         .wpp-header-name { font-size: 13px; font-weight: 700; color: #fff; }
         .wpp-header-status { font-size: 11px; color: rgba(255,255,255,0.7); }
         .wpp-close { background: none; border: none; color: rgba(255,255,255,0.7); cursor: pointer; font-size: 18px; padding: 2px 4px; line-height: 1; margin-left: auto; }
@@ -209,6 +262,8 @@ export default function LandingPage() {
         .wpp-fab svg { width: 28px; height: 28px; fill: #fff; }
         .wpp-notify { position: absolute; top: -4px; right: -4px; width: 18px; height: 18px; background: #ef4444; border-radius: 50%; font-size: 10px; font-weight: 700; color: #fff; display: flex; align-items: center; justify-content: center; animation: pulse-dot 2s infinite; }
         @keyframes pulse-dot { 0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.4); } 50% { box-shadow: 0 0 0 6px rgba(239,68,68,0); } }
+
+        /* CTA FINAL */
         .cta-final { padding: 100px 48px; background: var(--dark); text-align: center; position: relative; overflow: hidden; }
         .cta-final::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(79,142,247,0.12) 0%, transparent 70%); }
         .cta-final-inner { position: relative; z-index: 2; max-width: 640px; margin: 0 auto; }
@@ -217,33 +272,39 @@ export default function LandingPage() {
         .cta-final p { font-size: 17px; color: rgba(255,255,255,0.55); margin-bottom: 40px; line-height: 1.7; }
         .cta-pills { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 40px; }
         .cta-pill { background: rgba(79,142,247,0.1); border: 1px solid rgba(79,142,247,0.3); color: rgba(255,255,255,0.7); padding: 8px 16px; border-radius: 100px; font-size: 13px; }
-        .cta-seals { display: flex; justify-content: center; gap: 32px; margin-top: 24px; }
+        .cta-seals { display: flex; justify-content: center; gap: 32px; margin-top: 24px; flex-wrap: wrap; }
         .cta-seal { font-size: 13px; color: rgba(255,255,255,0.35); display: flex; align-items: center; gap: 6px; }
+
         footer { background: #0F172A; padding: 24px 48px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid rgba(255,255,255,0.06); }
         footer p { font-size: 12px; color: #475569; }
         .footer-links { display: flex; gap: 24px; }
         .footer-links a { font-size: 12px; color: #475569; text-decoration: none; }
         .footer-links a:hover { color: var(--primary); }
+
         @media (max-width: 900px) {
           nav { padding: 16px 20px; }
           .hero { padding: 60px 20px; min-height: auto; }
           .hero-mockup { display: none; }
-          .como-grid, .feat-grid, .dep-grid { grid-template-columns: 1fr; }
-          .pq-grid { grid-template-columns: repeat(2, 1fr); }
+          .numeros-grid { grid-template-columns: 1fr; gap: 24px; }
+          .para-quem-grid { grid-template-columns: repeat(2, 1fr); }
+          .feat-grid, .dep-grid { grid-template-columns: 1fr; }
+          .mais-simples-inner { grid-template-columns: 1fr; gap: 32px; }
           .price-grid { grid-template-columns: 1fr !important; }
           .price-card.featured { transform: none; }
-          .como-funciona, .funcionalidades, .pra-quem, .depoimentos, .precos, .faq, .cta-final { padding: 60px 20px; }
-          .urgencia { padding: 40px 20px; }
+          .para-quem, .funcionalidades, .depoimentos, .precos, .faq, .cta-final, .mais-simples { padding: 60px 20px; }
+          .urgencia, .cta-trial { padding: 40px 20px; }
           footer { flex-direction: column; gap: 12px; padding: 20px; text-align: center; }
           .wpp-bubble { width: 270px; }
-          .wpp-float { bottom: 16px; right: 16px; }
+          .wpp-float { bottom: 80px; right: 16px; }
+          .cta-trial-cards { flex-direction: column; align-items: center; }
+          .numeros { padding: 40px 20px; }
         }
       `}</style>
 
       {/* NAVBAR */}
       <nav>
-        <div className="logo">
-          <img src="/logo.png" alt="EstéticaPro" style={{height:80, objectFit:"contain"}} />
+        <div>
+          <img src="/logo.png" alt="EstéticaPro" style={{height:56, width:180, objectFit:"contain", transform:"scale(1.8)", transformOrigin:"left center"}} />
         </div>
         <Link href="/login" className="nav-btn">Entrar</Link>
       </nav>
@@ -252,9 +313,9 @@ export default function LandingPage() {
       <div className="urgency-bar">
         <div className="urgency-track">
           <span>🚗 OFERTA POR TEMPO LIMITADO</span><span>· GARANTA SEU ACESSO ·</span>
-          <span>🚗 DESCONTO ENCERRA EM BREVE</span><span>· GARANTA SEU ACESSO ·</span>
+          <span>🚗 7 DIAS GRÁTIS SEM CARTÃO</span><span>· COMECE AGORA ·</span>
           <span>🚗 OFERTA POR TEMPO LIMITADO</span><span>· GARANTA SEU ACESSO ·</span>
-          <span>🚗 DESCONTO ENCERRA EM BREVE</span><span>· GARANTA SEU ACESSO ·</span>
+          <span>🚗 7 DIAS GRÁTIS SEM CARTÃO</span><span>· COMECE AGORA ·</span>
         </div>
       </div>
 
@@ -262,59 +323,75 @@ export default function LandingPage() {
       <div className="hero">
         <div className="hero-content">
           <div className="hero-badge">🚗 sistema para estéticas automotivas</div>
+
+          {/* PROVA SOCIAL COM AVATARES */}
+          <div className="hero-social-proof">
+            <div className="hero-avatars">
+              <div className="hero-avatar"><img src="/ricardo.jpeg" alt="" /></div>
+              <div className="hero-avatar"><img src="/fernando.jpeg" alt="" /></div>
+              <div className="hero-avatar"><img src="/paulo.jpeg" alt="" /></div>
+            </div>
+            <div className="hero-social-text">
+              <strong>+500 estéticas</strong> já organizam o negócio com o EstéticaPro
+            </div>
+          </div>
+
           <h1>Pare de perder agendamentos e comece a <em>crescer de verdade</em></h1>
-          <p>O sistema que organiza sua agenda, controla seus clientes e confirma agendamentos pelo WhatsApp — tudo pelo celular, simples e 100% online.</p>
+          <p>O sistema mais simples do mercado para estéticas automotivas — agenda, clientes e WhatsApp integrado. Sem tutoriais, sem complicação.</p>
           <div className="hero-cta">
-            <button className="btn-primary" onClick={scrollToPrecos}>COMEÇAR AGORA</button>
-            <span className="cta-note">Sem taxas de setup. Plano mensal cancele quando quiser.</span>
+            <button className="btn-primary" onClick={scrollToPrecos}>EXPERIMENTAR 7 DIAS GRÁTIS</button>
+            <div className="hero-cta-checks">
+              <span className="hero-check"><span className="hero-check-icon">✓</span> 7 dias grátis</span>
+              <span className="hero-check"><span className="hero-check-icon">✓</span> Sem cartão</span>
+              <span className="hero-check"><span className="hero-check-icon">✓</span> Cancele quando quiser</span>
+            </div>
           </div>
         </div>
         <div className="hero-mockup">
-          <div className="mockup-bar">
-            <div className="mockup-dot" style={{background:"#FF5F57"}}></div>
-            <div className="mockup-dot" style={{background:"#FFBD2E"}}></div>
-            <div className="mockup-dot" style={{background:"#28C840"}}></div>
-            <div className="mockup-url">esteticapro.com.br/dashboard</div>
+          <video src="/video1.mp4" autoPlay loop muted playsInline style={{width:"100%", height:"100%", objectFit:"cover", display:"block"}} />
+        </div>
+      </div>
+
+      {/* NÚMEROS — PROVA SOCIAL */}
+      <div className="numeros">
+        <div className="numeros-grid">
+          <div>
+            <div className="numero-val">+500</div>
+            <div className="numero-label">estéticas já usam o EstéticaPro para organizar o negócio</div>
           </div>
-          <div className="mockup-body">
-            <div className="mockup-header">🚗 EstéticaPro — Hoje, 15 de Abril</div>
-            <div className="mockup-cards">
-              <div className="mockup-card mc-blue"><div className="mc-icon">📅</div><div className="mc-label">Agendamentos</div><div className="mc-val" style={{color:"#60A5FA"}}>4</div></div>
-              <div className="mockup-card mc-green"><div className="mc-icon">✅</div><div className="mc-label">Concluídos</div><div className="mc-val" style={{color:"#4ade80"}}>2</div></div>
-              <div className="mockup-card mc-orange"><div className="mc-icon">🕐</div><div className="mc-label">Próximo</div><div className="mc-val" style={{color:"#fb923c"}}>14h</div></div>
-            </div>
-            <table className="mockup-table">
-              <thead><tr><th>Cliente</th><th>Veículo</th><th>Serviço</th><th>Status</th></tr></thead>
-              <tbody>
-                <tr><td>João Silva</td><td>Gol 2018</td><td>Lavagem</td><td><span className="tag-green">Confirmado</span></td></tr>
-                <tr><td>Maria Souza</td><td>Civic 2020</td><td>Polimento</td><td><span className="tag-orange">Pendente</span></td></tr>
-                <tr><td>Carlos M.</td><td>Hilux 2021</td><td>Vitrificação</td><td><span className="tag-orange">Pendente</span></td></tr>
-              </tbody>
-            </table>
+          <div>
+            <div className="numero-val">+10mil</div>
+            <div className="numero-label">agendamentos gerenciados todos os meses na plataforma</div>
+          </div>
+          <div>
+            <div className="numero-val">4.9★</div>
+            <div className="numero-label">avaliação média dos clientes que usam o sistema</div>
           </div>
         </div>
       </div>
 
-      {/* COMO FUNCIONA */}
-      <section className="como-funciona">
+      {/* PARA QUEM É */}
+      <section className="para-quem">
         <div className="section-header">
-          <div className="section-tag">Como Funciona</div>
-          <h2>Como Funciona o EstéticaPro</h2>
-          <p>Da agenda ao WhatsApp, tudo organizado em um só lugar</p>
+          <div className="section-tag">Para Quem É</div>
+          <h2>A tecnologia feita para o seu negócio</h2>
+          <p>Se você trabalha com estética automotiva, o EstéticaPro foi criado para você</p>
         </div>
-        <div className="como-grid">
-          <div className="como-text">
-            <p>O EstéticaPro é uma plataforma completa criada para <strong>donos de estéticas automotivas e lava-rápidos</strong> que querem parar de improvisar e começar a gerir o negócio com profissionalismo.</p>
-            <p>A plataforma centraliza sua agenda, clientes, veículos e serviços — tudo acessível pelo celular ou computador, em tempo real. Você elimina as anotações no papel, nunca mais esquece um agendamento e confirma tudo pelo WhatsApp com um clique.</p>
-          </div>
-          <div className="devices-mock">
-            <div className="device-laptop"><div className="device-screen"><div className="ds-title">🚗 Dashboard — EstéticaPro</div><div className="ds-bar ds-gold"></div><div className="ds-bar ds-gray"></div><div className="ds-bar ds-sm"></div></div></div>
-            <div className="device-row">
-              <div className="device-phone"><div className="device-screen" style={{minHeight:"80px"}}><div className="ds-title">Agenda</div><div className="ds-bar ds-gold"></div><div className="ds-bar ds-gray"></div></div></div>
-              <div className="device-tablet"><div className="device-screen" style={{minHeight:"80px"}}><div className="ds-title">Clientes</div><div className="ds-bar ds-gold"></div><div className="ds-bar ds-gray"></div><div className="ds-bar ds-sm"></div></div></div>
+        <div className="para-quem-grid">
+          {[
+            { emoji:"✨", title:"Estética Automotiva", text:"Agenda, clientes e serviços organizados em um só lugar" },
+            { emoji:"🚿", title:"Lava-Rápido", text:"Gerencie filas e agendamentos sem papel e sem confusão" },
+            { emoji:"🔧", title:"Polimento e Vitrificação", text:"Controle premium com histórico completo por veículo" },
+            { emoji:"🏪", title:"Centro Automotivo", text:"Múltiplos serviços organizados de forma profissional" },
+          ].map((item, i) => (
+            <div key={i} className="para-quem-card">
+              <div style={{height:100, background:"linear-gradient(135deg,#1E293B,#0F172A)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:48}}>{item.emoji}</div>
+              <div className="para-quem-body">
+                <div className="para-quem-title">{item.title}</div>
+                <div className="para-quem-text">{item.text}</div>
+              </div>
             </div>
-            <p style={{fontSize:"12px",color:"var(--gray)",textAlign:"center"}}>Funciona no celular, tablet e computador</p>
-          </div>
+          ))}
         </div>
       </section>
 
@@ -323,15 +400,16 @@ export default function LandingPage() {
         <div className="section-header">
           <div className="section-tag">Funcionalidades</div>
           <h2>Tudo que você precisa em um só sistema</h2>
+          <p>Simples de usar, poderoso o suficiente para organizar sua estética do jeito certo</p>
         </div>
         <div className="feat-grid">
           {[
-            {icon:"📅", title:"Agenda Completa", text:"Visualize todos os agendamentos do dia, da semana ou do mês. Nunca mais perca um cliente por esquecimento."},
-            {icon:"👤", title:"Clientes e Veículos", text:"Cadastre seus clientes com todos os veículos vinculados. Histórico completo de cada carro na palma da mão."},
-            {icon:"💬", title:"Confirmação via WhatsApp", text:"Envie confirmação de agendamento direto no WhatsApp do cliente com um clique. Profissional e rápido."},
-            {icon:"🚗", title:"Gestão de Serviços", text:"Cadastre seus serviços com preço e duração. O sistema calcula automaticamente o tempo da agenda."},
-            {icon:"📊", title:"Dashboard em Tempo Real", text:"Veja quantos agendamentos tem hoje, o próximo horário e quantos veículos estão em serviço agora."},
-            {icon:"📱", title:"100% Mobile", text:"Funciona perfeitamente no celular. Gerencie sua estética de qualquer lugar, sem precisar de computador."},
+            {icon:"📅", title:"Agenda Completa", text:"Visualize todos os agendamentos do dia, semana ou mês. Nunca mais perca um cliente por esquecimento."},
+            {icon:"👤", title:"Clientes e Veículos", text:"Cadastre clientes com todos os veículos vinculados. Histórico completo de cada carro na palma da mão."},
+            {icon:"💬", title:"WhatsApp Automático", text:"Confirme agendamentos, avise sobre serviços prontos e envie lembretes — tudo automático pelo WhatsApp."},
+            {icon:"🚗", title:"Gestão de Serviços", text:"Cadastre seus serviços com preço. O sistema organiza tudo e gera histórico completo por veículo."},
+            {icon:"📊", title:"Dashboard em Tempo Real", text:"Veja quantos carros tem para atender hoje, próximo horário e veículos em serviço agora."},
+            {icon:"📱", title:"100% pelo Celular", text:"Funciona perfeitamente no celular. Gerencie sua estética de qualquer lugar, sem precisar de computador."},
           ].map((f, i) => (
             <div key={i} className="feat-card">
               <div className="feat-icon">{f.icon}</div>
@@ -342,55 +420,112 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* PRA QUEM */}
-      <section className="pra-quem">
-        <div className="section-header">
-          <div className="section-tag">Pra Quem É</div>
-          <h2>🚗 Pra Quem é o EstéticaPro</h2>
-          <p>Se você trabalha com estética automotiva, esse sistema é pra você</p>
-        </div>
-        <div className="pq-grid">
-          {[
-            {icon:"✨", title:"Estéticas Automotivas", text:"Controle total da operação — agenda, clientes e serviços em um só lugar"},
-            {icon:"🚿", title:"Lava-Rápidos", text:"Gerencie filas e agendamentos sem papel e sem confusão"},
-            {icon:"🔧", title:"Polimento e Vitrificação", text:"Controle serviços premium com histórico completo por veículo"},
-            {icon:"🏪", title:"Centros Automotivos", text:"Múltiplos serviços e clientes organizados de forma profissional"},
-          ].map((p, i) => (
-            <div key={i} className="pq-card">
-              <div className="pq-icon">{p.icon}</div>
-              <h3>{p.title}</h3>
-              <p>{p.text}</p>
+      {/* MAIS SIMPLES QUE A CONCORRÊNCIA */}
+      <section className="mais-simples">
+        <div className="mais-simples-inner">
+          <div>
+            <div className="section-tag" style={{color:"#93C5FD"}}>Por Que o EstéticaPro</div>
+            <h2>Mais simples que <em>qualquer outro sistema</em> do mercado</h2>
+            <p>Outros sistemas são cheios de tutoriais, módulos complicados e funcionalidades que você nunca vai usar. O EstéticaPro foi feito para ser usado, não para impressionar.</p>
+            {[
+              { icon:"⚡", title:"Pronto em minutos", text:"Cadastre seus serviços e comece a usar. Sem configuração complicada." },
+              { icon:"📱", title:"Interface simples", text:"Se você sabe usar WhatsApp, você sabe usar o EstéticaPro." },
+              { icon:"🎯", title:"Só o que importa", text:"Sem módulos desnecessários. Só o que você usa no dia a dia." },
+            ].map((item, i) => (
+              <div key={i} className="simples-item">
+                <div className="simples-icon">{item.icon}</div>
+                <div className="simples-text">
+                  <h4>{item.title}</h4>
+                  <p>{item.text}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="simples-vs">
+            <div className="vs-title">EstéticaPro vs Concorrência</div>
+            {[
+              { label:"Configuração inicial", nos:"Minutos", eles:"Horas/dias" },
+              { label:"Tutoriais necessários", nos:"Nenhum", eles:"Muitos" },
+              { label:"WhatsApp integrado", nos:"✓ Nativo", eles:"Extra pago" },
+              { label:"Suporte", nos:"WhatsApp", eles:"Ticket/e-mail" },
+              { label:"Preço", nos:"A partir de R$97,90", eles:"Muito mais caro" },
+              { label:"Trial grátis", nos:"7 dias sem cartão", eles:"Com cartão" },
+            ].map((row, i) => (
+              <div key={i} className="vs-row">
+                <span className="vs-label">{row.label}</span>
+                <span style={{display:"flex", gap:20}}>
+                  <span className="vs-nos">{row.nos}</span>
+                  <span className="vs-eles">{row.eles}</span>
+                </span>
+              </div>
+            ))}
+            <div style={{display:"flex", justifyContent:"space-between", marginTop:12, fontSize:11, color:"rgba(255,255,255,0.3)"}}>
+              <span></span>
+              <span style={{display:"flex", gap:20}}>
+                <span style={{color:"#4ade80"}}>Nós</span>
+                <span style={{color:"#f87171"}}>Eles</span>
+              </span>
             </div>
-          ))}
+          </div>
         </div>
       </section>
 
       {/* DEPOIMENTOS */}
       <section className="depoimentos">
         <div className="section-header">
-          <div className="section-tag">Clientes</div>
-          <h2>⭐ O Que Nossos Clientes Dizem</h2>
-          <p>Estéticas que transformaram sua gestão com o EstéticaPro</p>
+          <div className="section-tag">Depoimentos</div>
+          <h2>O que nossos clientes dizem</h2>
+          <p>Estéticas que transformaram a gestão com o EstéticaPro</p>
         </div>
         <div className="dep-grid">
-          {[
-            {name:"Ricardo Oliveira", biz:"Auto Estética Premium — São Paulo/SP", stars:"⭐⭐⭐⭐⭐", text:"Antes eu anotava tudo no caderno e sempre esquecia algum agendamento. Com o EstéticaPro tudo ficou organizado e os clientes adoram receber a confirmação pelo WhatsApp.", foto:"/ricardo.jpeg"},
-            {name:"Fernanda Costa", biz:"Lava Car Express — Campinas/SP", stars:"⭐⭐⭐⭐⭐", text:"O sistema é muito fácil de usar. Em menos de 30 minutos já tinha cadastrado todos os meus clientes e veículos. Recomendo para qualquer estética.", foto:"/fernando.jpeg"},
-            {name:"Paulo Henrique", biz:"Top Polimentos — Ribeirão Preto/SP", stars:"⭐⭐⭐⭐⭐", text:"Finalmente consigo ver no dashboard quantos carros tenho para atender hoje. O botão de WhatsApp economiza muito tempo na confirmação dos agendamentos.", foto:"/paulo.jpeg"},
-          ].map((d, i) => (
+          {depoimentosData.map((d, i) => (
             <div key={i} className="dep-card">
-              <div className="dep-header">
-                <div className="dep-avatar" style={{overflow:"hidden", padding:0}}>
-                  <img src={d.foto} alt={d.name} style={{width:"100%", height:"100%", objectFit:"cover"}} />
+              <img src={d.foto} alt={d.nome} className="dep-foto" />
+              <div className="dep-stars">⭐⭐⭐⭐⭐</div>
+              <div className="dep-frase" style={{marginTop:12}}>"{d.frase}"</div>
+              <div className="dep-texto">{d.texto}</div>
+              <div className="dep-footer">
+                <div>
+                  <div className="dep-nome">{d.nome}</div>
+                  <div className="dep-negocio">{d.negocio}</div>
                 </div>
-                <div><div className="dep-name">{d.name}</div><div className="dep-biz">{d.biz}</div></div>
+                <div className="wpp-badge">✓ Via WhatsApp</div>
               </div>
-              <div style={{marginBottom:12}}>{d.stars}</div>
-              <p style={{fontSize:14, color:"var(--gray)", lineHeight:1.7}}>{d.text}</p>
-              <div className="wpp-badge" style={{marginTop:16}}>✓ Via WhatsApp</div>
             </div>
           ))}
         </div>
+      </section>
+
+      {/* CTA TRIAL */}
+      <section className="cta-trial">
+        <h2>Comece a usar agora mesmo e tenha mais sucesso em 2026</h2>
+        <p>Sem complicação, sem contrato, sem cartão de crédito</p>
+        <div className="cta-trial-cards">
+          <div className="cta-trial-card">
+            <div className="cta-trial-card-icon">🎁</div>
+            <div>
+              <div className="cta-trial-card-title">7 dias grátis</div>
+              <div className="cta-trial-card-sub">Acesso gratuito, sem compromisso</div>
+            </div>
+          </div>
+          <div className="cta-trial-card">
+            <div className="cta-trial-card-icon">💳</div>
+            <div>
+              <div className="cta-trial-card-title">Sem cartão</div>
+              <div className="cta-trial-card-sub">Sem cadastrar cartão de crédito</div>
+            </div>
+          </div>
+          <div className="cta-trial-card">
+            <div className="cta-trial-card-icon">❌</div>
+            <div>
+              <div className="cta-trial-card-title">Sem fidelidade</div>
+              <div className="cta-trial-card-sub">Cancele quando quiser</div>
+            </div>
+          </div>
+        </div>
+        <Link href="/assinar?plano=mensal" className="btn-white">
+          EXPERIMENTAR 7 DIAS GRÁTIS →
+        </Link>
       </section>
 
       {/* URGÊNCIA */}
@@ -411,18 +546,17 @@ export default function LandingPage() {
           <p style={{color:"var(--primary-dark)",fontWeight:600}}>⚡ Teste grátis por 7 dias — sem cartão necessário</p>
         </div>
         <div className="price-grid">
-
-          {/* MENSAL — TRIAL */}
+          {/* MENSAL */}
           <div className="price-card featured">
             <div className="price-badge">🎁 MAIS POPULAR</div>
             <div className="price-tag">Comece sem pagar nada</div>
             <div className="price-name">Mensal</div>
             <div style={{background:"#F0FDF4", border:"1px solid #BBF7D0", color:"#16A34A", fontSize:12, fontWeight:700, padding:"4px 12px", borderRadius:100, textAlign:"center", marginBottom:12}}>🎁 7 dias grátis</div>
-            <div className="price-val"><strong>97,90</strong><span>/mês</span></div>
+            <div className="price-val"><strong>129,99</strong><span>/mês</span></div>
             <div className="price-period">após o período de teste</div>
             <hr className="price-divider" />
             <div className="price-feat">✨ Incluído:</div>
-            {["Agenda de serviços","Clientes e veículos ilimitados","Gestão de serviços","Suporte por WhatsApp"].map((f,i) => (
+            {["Agenda de serviços","Clientes e veículos ilimitados","Gestão de serviços","Confirmação via WhatsApp","Dashboard em tempo real","Suporte por WhatsApp"].map((f,i) => (
               <div key={i} className="price-item"><span className="pi-check">✓</span>{f}</div>
             ))}
             <Link href="/assinar?plano=mensal">
@@ -436,13 +570,13 @@ export default function LandingPage() {
             <div className="price-badge" style={{background:"linear-gradient(90deg,#F59E0B,#EF4444)"}}>⭐ PREMIUM</div>
             <div className="price-tag" style={{color:"#94A3B8"}}>Para quem quer o máximo</div>
             <div className="price-name" style={{color:"#F59E0B"}}>Premium</div>
-            <div style={{background:"rgba(245,158,11,0.15)", border:"1px solid rgba(245,158,11,0.3)", color:"#FCD34D", fontSize:11, fontWeight:700, padding:"4px 12px", borderRadius:100, textAlign:"center", marginBottom:12}}>🚗 WhatsApp integrado</div>
-            <div className="price-old" style={{color:"#64748B"}}>De R$ 497,00</div>
-            <div className="price-val"><strong style={{color:"#F59E0B"}}>249,90</strong><span style={{color:"#94A3B8"}}>/mês</span></div>
+            <div style={{background:"rgba(245,158,11,0.15)", border:"1px solid rgba(245,158,11,0.3)", color:"#FCD34D", fontSize:11, fontWeight:700, padding:"4px 12px", borderRadius:100, textAlign:"center", marginBottom:12}}>🔥 OFERTA ESPECIAL DE LANÇAMENTO</div>
+            <div className="price-old" style={{color:"#64748B"}}>De R$ 249,90</div>
+            <div className="price-val"><strong style={{color:"#F59E0B"}}>99,97</strong><span style={{color:"#94A3B8"}}>/mês</span></div>
             <div className="price-period" style={{color:"#64748B"}}>Acesso mensal completo</div>
             <hr className="price-divider" style={{borderColor:"#334155"}} />
             <div className="price-feat" style={{color:"#F59E0B"}}>⭐ Tudo do Mensal +</div>
-            {["WhatsApp próprio conectado","Envio automático de lembretes","Notificações para clientes","Instância exclusiva Evolution API","Suporte VIP prioritário"].map((f,i) => (
+            {["WhatsApp próprio conectado","Envio automático para clientes","Notificações de status do serviço","Instância exclusiva Evolution API","Suporte VIP prioritário"].map((f,i) => (
               <div key={i} className="price-item" style={{color:"#CBD5E1"}}><span style={{color:"#F59E0B", flexShrink:0, marginTop:1}}>✓</span>{f}</div>
             ))}
             <Link href="/assinar?plano=premium">
@@ -450,15 +584,14 @@ export default function LandingPage() {
             </Link>
             <div className="price-secure" style={{color:"#64748B"}}>🔒 Pagamento 100% seguro</div>
           </div>
-
         </div>
       </section>
-      
+
       {/* FAQ */}
       <section className="faq">
         <div className="section-header">
           <div className="section-tag">Dúvidas</div>
-          <h2>❓ Perguntas Frequentes</h2>
+          <h2>Essas são as dúvidas mais frequentes</h2>
           <p>Tire todas as suas dúvidas sobre o EstéticaPro</p>
         </div>
         <div className="faq-inner">
@@ -493,7 +626,7 @@ export default function LandingPage() {
 
       {/* FOOTER */}
       <footer>
-        <p>© 2025 EstéticaPro — Todos os direitos reservados</p>
+        <p>© 2026 EstéticaPro — Todos os direitos reservados</p>
         <div className="footer-links">
           <a href="/termos-de-uso">Termos de Uso</a>
           <a href="/politica-de-privacidade">Política de Privacidade</a>
@@ -505,8 +638,8 @@ export default function LandingPage() {
         <div className={`wpp-bubble ${chatOpen ? "visible" : ""}`}>
           <div className="wpp-header">
             <div className="wpp-avatar">
-  <img src="/logo.png" alt="EstéticaPro" style={{width:"100%", height:"100%", objectFit:"cover", borderRadius:"50%"}} />
-</div>
+              <img src="/logo.png" alt="EstéticaPro" style={{width:"100%", height:"100%", objectFit:"cover", borderRadius:"50%"}} />
+            </div>
             <div style={{flex:1}}>
               <div className="wpp-header-name">EstéticaPro</div>
               <div className="wpp-header-status">● Online agora</div>
