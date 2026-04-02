@@ -12,7 +12,7 @@ export async function GET() {
     if (!user) return NextResponse.json({ error: "Usuário não encontrado" }, { status: 404 });
 
     const services = await prisma.service.findMany({
-      where: { userId: user.id },
+      where: { userId: user.id, ativo: true },
       orderBy: { name: "asc" },
     });
 
@@ -94,7 +94,7 @@ export async function DELETE(req: NextRequest) {
     const service = await prisma.service.findFirst({ where: { id, userId: user.id } });
     if (!service) return NextResponse.json({ error: "Não autorizado" }, { status: 403 });
 
-    await prisma.service.delete({ where: { id } });
+    await prisma.service.update({ where: { id }, data: { ativo: false } });
 
     return NextResponse.json({ success: true });
   } catch (error) {
