@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
     const planConfig: Record<string, { value: number; descricao: string }> = {
       mensal:  { value: 97.90,  descricao: "Assinatura EstéticaPro Mensal" },
       anual:   { value: 957.80, descricao: "Assinatura EstéticaPro Anual" },
-      premium: { value: 249.90, descricao: "Assinatura EstéticaPro Premium" },
+      premium: { value: 99.97, descricao: "Assinatura EstéticaPro Premium" },
     };
 
     const selected = planConfig[selectedPlan] || planConfig["mensal"];
