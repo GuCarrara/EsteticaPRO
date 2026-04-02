@@ -86,3 +86,11 @@ model Appointment {
   vehicle Vehicle @relation(fields: [vehicleId], references: [id])
   service Service @relation(fields: [serviceId], references: [id])
 }
+model ConversationState {
+  id        String   @id @default(cuid())
+  userId    String
+  phone     String
+  step      String   @default("menu")
+  data      Json     @default("{}")
+  updatedAt DateTime @default(now()) @updatedAt
+}
