@@ -94,7 +94,7 @@ export async function DELETE(req: NextRequest) {
     const service = await prisma.service.findFirst({ where: { id, userId: user.id } });
     if (!service) return NextResponse.json({ error: "Não autorizado" }, { status: 403 });
 
-    await prisma.service.update({ where: { id }, data: { ativo: false } });
+    await prisma.service.delete({ where: { id } });
 
     return NextResponse.json({ success: true });
   } catch (error) {
