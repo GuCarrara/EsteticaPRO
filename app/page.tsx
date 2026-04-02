@@ -571,7 +571,7 @@ export default function LandingPage() {
             <div className="price-tag" style={{color:"#94A3B8"}}>Para quem quer o máximo</div>
             <div className="price-name" style={{color:"#F59E0B"}}>Premium</div>
             <div style={{background:"rgba(245,158,11,0.15)", border:"1px solid rgba(245,158,11,0.3)", color:"#FCD34D", fontSize:11, fontWeight:700, padding:"4px 12px", borderRadius:100, textAlign:"center", marginBottom:12}}>🔥 OFERTA ESPECIAL DE LANÇAMENTO</div>
-            <div className="price-old" style={{color:"#64748B"}}>De R$ <video src="/video1.mp4" autoPlay loop muted playsInline style={{width:"100%", height:"100%", objectFit:"cover", display:"block"}} />0</div>
+            <div className="price-old" style={{color:"#94A3B8", textDecoration:"line-through"}}>De R$ 249,90</div>
             <div className="price-val"><strong style={{color:"#F59E0B"}}>99,97</strong><span style={{color:"#94A3B8"}}>/mês</span></div>
             <div className="price-period" style={{color:"#64748B"}}>Acesso mensal completo</div>
             <hr className="price-divider" style={{borderColor:"#334155"}} />
