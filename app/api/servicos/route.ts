@@ -12,7 +12,7 @@ export async function GET() {
     if (!user) return NextResponse.json({ error: "Usuário não encontrado" }, { status: 404 });
 
     const services = await prisma.service.findMany({
-      where: { userId: user.id, ativo: true },
+      where: { userId: user.id },
       orderBy: { name: "asc" },
     });
 
