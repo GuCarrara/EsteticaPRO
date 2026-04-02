@@ -217,7 +217,7 @@ function AssinarContent() {
           {isPremium && !isLoggedIn && !pix && !success && (
             <>
               <div className="subtitle">Assine o Premium e acesse na hora</div>
-              <div className="badge badge-premium">⭐ Plano Premium — R$ 249,90/mês</div>
+              <div className="badge badge-premium">⭐ Plano Premium — R$ 99,97/mês</div>
 
               <div className="card">
                 <div className="card-title">💳 Dados de pagamento</div>
@@ -256,7 +256,7 @@ function AssinarContent() {
                   </div>
                 )}
                 <button className="btn btn-premium" onClick={handlePagar} disabled={loading}>
-                  {loading ? "Processando..." : paymentMethod === "PIX" ? "📱 Gerar PIX — R$ 249,90" : "💳 Pagar — R$ 249,90"}
+                  {loading ? "Processando..." : paymentMethod === "PIX" ? "📱 Gerar PIX — R$ 99,97" : "💳 Pagar — R$ 99,97"}
                 </button>
                 <div className="secure">🔒 Pagamento 100% seguro via Asaas</div>
               </div>
@@ -272,7 +272,7 @@ function AssinarContent() {
             <>
               <div className="subtitle">Escolha seu plano para continuar</div>
               <div className={`badge ${plano === "premium" ? "badge-premium" : "badge-mensal"}`}>
-                {plano === "premium" ? "⭐ Plano Premium — R$ 249,90/mês" : "💳 Plano Mensal — R$ 97,90/mês"}
+                {plano === "premium" ? "⭐ Plano Premium — R$ 99,97/mês" : "💳 Plano Mensal — R$ 97,90/mês"}
               </div>
 
               <div className="card">
@@ -313,8 +313,8 @@ function AssinarContent() {
                   disabled={loading}
                 >
                   {loading ? "Processando..." : paymentMethod === "PIX"
-                    ? `📱 Gerar PIX — ${plano === "premium" ? "R$ 249,90" : "R$ 97,90"}`
-                    : `💳 Pagar — ${plano === "premium" ? "R$ 249,90" : "R$ 97,90"}`}
+                    ? `📱 Gerar PIX — ${plano === "premium" ? "R$ 99,97" : "R$ 97,90"}`
+                    : `💳 Pagar — ${plano === "premium" ? "R$ 99,97" : "R$ 97,90"}`}
                 </button>
                 <div className="secure">🔒 Pagamento 100% seguro via Asaas</div>
               </div>
