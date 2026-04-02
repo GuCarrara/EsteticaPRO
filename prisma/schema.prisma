@@ -65,7 +65,7 @@ model Service {
   description String?
   price       Float
   duration    Int     @default(60)
-
+  ativo       Boolean @default(true)
   user         User          @relation(fields: [userId], references: [id])
   appointments Appointment[]
 }
