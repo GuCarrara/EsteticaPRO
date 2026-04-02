@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
     // Busca usuário dono da instância
     const user = await (prisma as any).user.findFirst({
       where: { evolutionInstance: instanceName },
-      include: { services: true },
+      include: { services: { where: { ativo: true } } },
     });
 
     if (!user) return NextResponse.json({ ok: true });
