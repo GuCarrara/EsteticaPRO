@@ -75,16 +75,8 @@ export async function POST(req: NextRequest) {
     const { action } = await req.json();
 
     // Reconectar — gera novo QR Code
-    if (action === "reconnect") {
+   if (action === "reconnect") {
       if (!user.evolutionInstance) return NextResponse.json({ error: "Instância não configurada" }, { status: 400 });
-
-      try {
-        // Deleta e recria a instância
-        await fetch(`${EVOLUTION_URL}/instance/logout/${user.evolutionInstance}`, {
-          method: "DELETE",
-          headers: { "apikey": EVOLUTION_KEY! },
-        });
-      } catch {}
 
       const res = await fetch(`${EVOLUTION_URL}/instance/connect/${user.evolutionInstance}`, {
         headers: { "apikey": EVOLUTION_KEY! },
