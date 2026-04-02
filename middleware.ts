@@ -18,7 +18,8 @@ export async function middleware(req: NextRequest) {
     pathname === "/politica-de-privacidade" ||
     pathname.startsWith("/api/recuperar-senha") ||
     pathname.startsWith("/api/redefinir-senha") ||
-    pathname.startsWith("/api/auth") ||
+    pathname.startsWith("/api/auth-code") ||
+    pathname.startsWith("/api/whatsapp-webhook");
     pathname.startsWith("/api/register") ||
     pathname.startsWith("/api/webhook") ||
     pathname.startsWith("/api/billing") ||
