@@ -348,7 +348,7 @@ export default function LandingPage() {
           </div>
         </div>
         <div className="hero-mockup">
-          <video src="/video1.mp4" autoPlay loop muted playsInline style={{width:"100%", height:"100%", objectFit:"cover", display:"block"}} />
+          <video src="https://res.cloudinary.com/dp7wqfexb/video/upload/v1775100909/video1_cb7gwm.mp4" autoPlay loop muted playsInline style={{width:"100%", height:"100%", objectFit:"cover", display:"block"}} />
         </div>
       </div>
 
