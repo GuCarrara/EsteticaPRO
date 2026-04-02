@@ -11,6 +11,7 @@ const navItems = [
   { href: "/clientes", icon: "👤", label: "Clientes" },
   { href: "/servicos", icon: "🚗", label: "Serviços" },
   { href: "/assinatura", icon: "💳", label: "Assinatura" },
+  { href: "/whatsapp", icon: "📱", label: "WhatsApp" },
 ];
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
