@@ -271,7 +271,8 @@ export async function POST(req: NextRequest) {
       }
 
       const appointmentDate = new Date(data.date);
-      appointmentDate.setHours(time.hour, time.minute, 0, 0);
+      // Corrige fuso horário Brasil (UTC-3)
+      appointmentDate.setHours(time.hour + 3, time.minute, 0, 0);
 
       await sendWhatsApp(instanceName, phone,
         `📋 *Confirme seu agendamento:*\n\n` +
