@@ -20,7 +20,7 @@ export async function middleware(req: NextRequest) {
     pathname.startsWith("/api/redefinir-senha") ||
     pathname.startsWith("/api/auth-code") ||
     pathname.startsWith("/api/whatsapp-webhook") ||
-    pathname.startsWith("/api/whatsapp-config");
+    pathname.startsWith("/api/whatsapp-config")
     pathname.startsWith("/api/register") ||
     pathname.startsWith("/api/webhook") ||
     pathname.startsWith("/api/billing") ||
