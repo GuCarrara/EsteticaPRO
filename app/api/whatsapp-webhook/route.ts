@@ -67,6 +67,7 @@ export async function POST(req: NextRequest) {
     });
 
     if (!user) return NextResponse.json({ ok: true });
+    console.log("Usuario encontrado:", user.id, "Servicos:", user.services?.length);
 
     // Busca ou cria estado da conversa
     let state = await (prisma as any).conversationState.findFirst({
