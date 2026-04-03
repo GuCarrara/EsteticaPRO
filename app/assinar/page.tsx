@@ -175,8 +175,8 @@ function AssinarContent() {
                     <div className="card-title">Seus dados</div>
                     <div className="card-sub">Preencha para criar sua conta. Sem cobrança agora!</div>
                     {error && <div className="error">{error}</div>}
-                    <label className="form-label">Nome completo *</label>
-                    <input className="form-input" placeholder="Seu nome completo" value={name} onChange={e => setName(e.target.value)} />
+                    <label className="form-label">Nome da loja *</label>
+                    <input className="form-input" placeholder="Ex: Auto Estética Silva" value={name} onChange={e => setName(e.target.value)} />
                     <label className="form-label">E-mail *</label>
                     <input className="form-input" type="email" placeholder="seu@email.com" value={email} onChange={e => setEmail(e.target.value)} />
                     <label className="form-label">WhatsApp *</label>
@@ -223,8 +223,8 @@ function AssinarContent() {
                 <div className="card-title">💳 Dados de pagamento</div>
                 <div className="card-sub">Após o pagamento você receberá e-mail com login e senha.</div>
                 {error && <div className="error">{error}</div>}
-                <label className="form-label">Nome completo *</label>
-                <input className="form-input" placeholder="Seu nome completo" value={name} onChange={e => setName(e.target.value)} />
+                <label className="form-label">Nome da loja *</label>
+                <input className="form-input" placeholder="Ex: Auto Estética Silva" value={name} onChange={e => setName(e.target.value)} />
                 <label className="form-label">E-mail *</label>
                 <input className="form-input" type="email" placeholder="seu@email.com" value={email} onChange={e => setEmail(e.target.value)} />
                 <label className="form-label">CPF *</label>
